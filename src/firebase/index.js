@@ -1,3 +1,5 @@
+import { fireConfig } from './config'
+
 let app
 
 if (typeof window !== 'undefined') {
@@ -8,8 +10,6 @@ if (typeof window !== 'undefined') {
   require('firebase/storage')
   require('firebase/analytics')
 }
-
-import { fireConfig } from './config'
 
 class Firebase {
   constructor() {
