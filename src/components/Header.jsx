@@ -42,7 +42,10 @@ function Header(props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const children = await firebase.db.collection('children').get()
+      const children = await firebase
+        .firestore()
+        .collection('children')
+        .get()
       console.log(
         children.docs.map(child =>
           Object.assign(child.data(), { id: child.id })
@@ -119,7 +122,7 @@ function Header(props) {
               <MenuItem onClick={handleClose}>
                 <Link
                   to="/"
-                  onClick={() => firebase.auth.signOut()}
+                  onClick={() => firebase.auth().signOut()}
                   style={{ textDecoration: 'none', color: '#000' }}
                 >
                   Cerrar Sesión

@@ -11,26 +11,20 @@ if (typeof window !== 'undefined') {
   require('firebase/analytics')
 }
 
-class Firebase {
-  constructor() {
-    if (typeof window !== 'undefined') {
-      app.initializeApp(fireConfig)
-      this.auth = app.auth()
-      this.db = app.firestore()
-      this.storage = app.storage()
-      this.uiConfig = {
-        // Popup signin flow rather than redirect flow.
-        signInFlow: 'popup',
-        // We will display Google and Email as auth providers.
-        signInOptions: [
-          app.auth.GoogleAuthProvider.PROVIDER_ID,
-          app.auth.EmailAuthProvider.PROVIDER_ID,
-        ],
-        signInSuccessUrl: '/perfil',
-      }
-    }
+let firebase, uiConfig
+
+if (typeof window !== 'undefined') {
+  firebase = app.initializeApp(fireConfig)
+  uiConfig = {
+    // Popup signin flow rather than redirect flow.
+    signInFlow: 'popup',
+    // We will display Google and Email as auth providers.
+    signInOptions: [
+      app.auth.GoogleAuthProvider.PROVIDER_ID,
+      app.auth.EmailAuthProvider.PROVIDER_ID,
+    ],
+    signInSuccessUrl: '/perfil',
   }
 }
 
-const firebase = new Firebase()
-export { firebase }
+export { firebase, uiConfig }

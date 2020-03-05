@@ -5,7 +5,7 @@ export default function useAuth() {
   const [authUser, setAuthUser] = useState(null)
 
   useEffect(() => {
-    firebase.auth.onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
         setAuthUser(user)
       } else {

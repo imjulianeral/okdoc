@@ -11,7 +11,7 @@ export default function UserProfile() {
   const user = useAuth()
 
   useEffect(() => {
-    firebase.auth.onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if (!user) navigate('login')
     })
   }, [firebase])
