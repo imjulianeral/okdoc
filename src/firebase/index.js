@@ -11,10 +11,10 @@ if (typeof window !== 'undefined') {
   require('firebase/analytics')
 }
 
-let firebase, uiConfig
+let uiConfig
 
 if (typeof window !== 'undefined') {
-  firebase = app.initializeApp(fireConfig)
+  app.initializeApp(fireConfig)
   uiConfig = {
     // Popup signin flow rather than redirect flow.
     signInFlow: 'popup',
@@ -27,4 +27,4 @@ if (typeof window !== 'undefined') {
   }
 }
 
-export { firebase, uiConfig }
+export { app as firebase, uiConfig }

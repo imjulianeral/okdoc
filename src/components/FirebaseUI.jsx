@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 
-import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth'
+import FirebaseUIAuth from 'react-firebaseui-localized'
 import { FirebaseContext } from '../firebase/context'
 import { uiConfig } from '../firebase'
 
@@ -10,9 +10,11 @@ export default function FirebaseUI() {
   return (
     <>
       {firebase && (
-        <StyledFirebaseAuth
-          uiConfig={uiConfig}
-          firebaseAuth={firebase.auth()}
+        <FirebaseUIAuth
+          firebase={firebase}
+          lang="es_419"
+          config={uiConfig}
+          auth={firebase.auth()}
         />
       )}
     </>
