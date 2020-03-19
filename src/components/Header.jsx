@@ -11,8 +11,15 @@ import {
   Menu,
   MenuItem,
   Avatar,
+  ListItemIcon,
 } from '@material-ui/core'
-import { AccountCircle, Menu as MenuIcon } from '@material-ui/icons'
+import {
+  AccountCircle,
+  Menu as MenuIcon,
+  Face,
+  PersonAdd,
+  ExitToApp,
+} from '@material-ui/icons'
 import { headerStyles } from './material/Material.config'
 
 import { FirebaseContext } from '../firebase/context'
@@ -40,23 +47,8 @@ function Header(props) {
     setAnchorEl(null)
   }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const children = await firebase
-        .firestore()
-        .collection('children')
-        .get()
-      console.log(
-        children.docs.map(child =>
-          Object.assign(child.data(), { id: child.id })
-        )
-      )
-    }
-    fetchData()
-  }, [firebase])
-
   return (
-    <AppBar>
+    <AppBar color="secondary">
       <Toolbar>
         {user && (
           <IconButton
@@ -111,56 +103,80 @@ function Header(props) {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>
-                <Link
-                  to="/perfil"
-                  style={{ textDecoration: 'none', color: '#000' }}
-                >
+              <Link
+                to="/perfil"
+                style={{ textDecoration: 'none', color: '#000' }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <Face color="primary" fontSize="small" />
+                  </ListItemIcon>
                   Perfil
-                </Link>
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <Link
-                  to="/"
-                  onClick={() => firebase.auth().signOut()}
-                  style={{ textDecoration: 'none', color: '#000' }}
-                >
+                </MenuItem>
+              </Link>
+              <Link
+                to="/"
+                onClick={() => firebase.auth().signOut()}
+                style={{ textDecoration: 'none', color: '#000' }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <ExitToApp color="primary" fontSize="small" />
+                  </ListItemIcon>
                   Cerrar Sesión
-                </Link>
-              </MenuItem>
+                </MenuItem>
+              </Link>
             </Menu>
           </>
         ) : (
           <>
-            <Link
-              to="/login"
-              style={{
-                textDecoration: 'none',
-              }}
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
             >
-              <Button
-                variant="outlined"
-                color="secondary"
-                endIcon={<AccountCircle />}
-                style={{ marginRight: '1rem' }}
-              >
-                Iniciar Sesión
-              </Button>
-            </Link>
-            <Link
-              to="/crear-cuenta"
-              style={{
-                textDecoration: 'none',
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
               }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={open}
+              onClose={handleClose}
             >
-              <Button
-                variant="outlined"
-                color="secondary"
-                endIcon={<AccountCircle />}
+              <Link
+                to="/login"
+                style={{ textDecoration: 'none', color: '#000' }}
               >
-                Crear Cuenta
-              </Button>
-            </Link>
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <Face color="primary" fontSize="small" />
+                  </ListItemIcon>
+                  Iniciar Sesión
+                </MenuItem>
+              </Link>
+              <Link
+                to="/crear-cuenta"
+                style={{ textDecoration: 'none', color: '#000' }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <PersonAdd color="primary" fontSize="small" />
+                  </ListItemIcon>
+                  Crear Cuenta
+                </MenuItem>
+              </Link>
+            </Menu>
           </>
         )}
       </Toolbar>

@@ -20,12 +20,12 @@ export const useStyles = makeStyles(theme => ({
 
 export const theme = createMuiTheme({
   palette: {
-    secondary: {
-      main: '#03dac6',
+    primary: {
+      main: '#1ABC9C',
       light: '#15eda3',
       contrastText: '#fff',
     },
-    primary: {
+    secondary: {
       main: '#fff',
       contrastText: '#03dac6',
     },
