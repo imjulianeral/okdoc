@@ -15,17 +15,18 @@ export default function UserProfile() {
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
-      if (!user) navigate('login')
+      if (!user) return navigate('login')
+      if (user !== null) {
+        const fetchUserData = async () => {
+          const userData = await firebase
+            .firestore()
+            .doc(`/users/${user.uid}`)
+            .get()
 
-      const fetchUserData = async () => {
-        const userData = await firebase
-          .firestore()
-          .doc(`/users/${user.uid}`)
-          .get()
-
-        setUserRecord(userData.data())
+          setUserRecord(userData.data())
+        }
+        fetchUserData()
       }
-      fetchUserData()
     })
   }, [firebase])
 

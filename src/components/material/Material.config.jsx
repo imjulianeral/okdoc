@@ -1,20 +1,21 @@
-import { makeStyles, createMuiTheme } from '@material-ui/core/styles'
+import {
+  makeStyles,
+  withStyles,
+  createMuiTheme,
+} from '@material-ui/core/styles'
+import red from '@material-ui/core/colors/red'
+import Button from '@material-ui/core/Button'
 
-export const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    minWidth: 250,
-    marginTop: 50,
+export const formStyles = makeStyles(theme => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: '15.5rem',
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
-  title: {
-    flexGrow: 1,
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
+  input: {
+    display: 'none',
   },
 }))
 
@@ -30,6 +31,10 @@ export const theme = createMuiTheme({
       contrastText: '#03dac6',
     },
   },
+  // typography: {
+  //   // Tell Material-UI what's the font-size on the html element is.
+  //   htmlFontSize: 10,
+  // },
 })
 
 export const headerStyles = makeStyles(theme => ({
@@ -43,3 +48,13 @@ export const headerStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
 }))
+
+export const RedButton = withStyles(theme => ({
+  root: {
+    color: theme.palette.getContrastText(red[500]),
+    backgroundColor: red[500],
+    '&:hover': {
+      backgroundColor: red[700],
+    },
+  },
+}))(Button)
