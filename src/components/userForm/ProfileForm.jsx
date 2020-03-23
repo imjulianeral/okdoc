@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react'
 import { FirebaseContext } from '../../firebase/context'
 import useAuth from '../../hooks/useAuth'
+import useFormValidator from '../../hooks/useFormValidator'
+import validateCreateAccount from '../../validation/validateCreateAccount'
 
 import AccountType from './AccountType'
 import Children from './Children'
@@ -11,7 +13,8 @@ import Success from './Success'
 export default function ProfileForm() {
   const { firebase } = useContext(FirebaseContext)
   const authUser = useAuth()
-  const [user, setUser] = useState({
+
+  const initialState = {
     birthday: new Date(),
     children: [],
     createdAt: new Date(),
@@ -23,9 +26,16 @@ export default function ProfileForm() {
     stars: '',
     cv: '',
     phone: '',
-  })
+  }
 
   const [formStep, setFormStep] = useState(1)
+  const {
+    errors,
+    values,
+    setValues,
+    handleChange,
+    handleSubmit,
+  } = useFormValidator(initialState, validateCreateAccount, createProfile)
 
   const nextStep = () => {
     setFormStep(formStep + 1)
@@ -35,16 +45,9 @@ export default function ProfileForm() {
     setFormStep(formStep - 1)
   }
 
-  const handleChange = e => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  const createProfile = async () => {
-    if (user.type === 'Paciente') {
-      const { cv, features, children, ...userProfile } = user
+  async function createProfile() {
+    if (values.type === 'Paciente') {
+      const { cv, features, children, ...userProfile } = values
       await firebase
         .firestore()
         .doc(`users/${authUser.uid}`)
@@ -80,8 +83,8 @@ export default function ProfileForm() {
       })
     }
 
-    if (user.type === 'Doctor' && typeof user.cv !== 'undefined') {
-      const { children, cv, ...userProfile } = user
+    if (values.type === 'Doctor' && typeof values.cv !== 'undefined') {
+      const { children, cv, ...userProfile } = values
       await firebase
         .firestore()
         .doc(`users/${authUser.uid}`)
@@ -100,36 +103,43 @@ export default function ProfileForm() {
         <AccountType
           nextStep={nextStep}
           handleChange={handleChange}
-          user={user}
-          setUser={setUser}
+          user={values}
+          setUser={setValues}
         />
       )
     case 2:
       return (
         <>
-          {user.type === 'Paciente' ? (
+          {values.type === 'Paciente' ? (
             <Children
               nextStep={nextStep}
               prevStep={prevStep}
               handleChange={handleChange}
-              user={user}
-              setUser={setUser}
+              user={values}
+              setUser={setValues}
             />
           ) : (
             <Doctor
               nextStep={nextStep}
               prevStep={prevStep}
               handleChange={handleChange}
-              user={user}
-              setUser={setUser}
+              user={values}
+              setUser={setValues}
             />
           )}
         </>
       )
     case 3:
-      return <Summary nextStep={nextStep} prevStep={prevStep} user={user} />
+      return (
+        <Summary
+          handleSubmit={handleSubmit}
+          nextStep={nextStep}
+          prevStep={prevStep}
+          user={values}
+        />
+      )
     case 4:
-      return <Success createProfile={createProfile} />
+      return <Success errors={errors} prevStep={prevStep} />
 
     default:
       break

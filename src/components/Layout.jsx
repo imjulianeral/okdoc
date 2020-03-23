@@ -6,6 +6,8 @@ import { ThemeProvider } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
 import { theme } from './material/Material.config'
 
+import { SnackbarProvider } from 'notistack'
+
 import Header from './Header'
 
 import '../css/layout.css'
@@ -23,14 +25,16 @@ function Layout({ children }) {
   `)
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Header siteTitle={data.site.siteMetadata.title} />
-      <main>{children}</main>
-      <footer style={{ marginTop: '20rem' }}>
-        Todos los derechos reservados &copy; {new Date().getFullYear()}
-      </footer>
-    </ThemeProvider>
+    <SnackbarProvider maxSnack={10}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Header siteTitle={data.site.siteMetadata.title} />
+        <main>{children}</main>
+        <footer style={{ marginTop: '20rem' }}>
+          Todos los derechos reservados &copy; {new Date().getFullYear()}
+        </footer>
+      </ThemeProvider>
+    </SnackbarProvider>
   )
 }
 

@@ -19,11 +19,12 @@ export default function Summary({
   user: { birthday, type, children, features, phone },
   nextStep,
   prevStep,
+  handleSubmit,
 }) {
   const user = useAuth()
-
   const next = e => {
     e.preventDefault()
+    handleSubmit()
     nextStep()
   }
   const back = e => {
@@ -39,7 +40,7 @@ export default function Summary({
             <h2 style={{ color: '#163a5f' }}>Verifica tu Perfil</h2>
           </Grid>
           <Grid item xs={12}>
-            <Paper style={{ minWidth: '20rem' }} variant="outlined">
+            <Paper variant="outlined">
               <List>
                 <Grid
                   container
@@ -71,9 +72,7 @@ export default function Summary({
                   <Grid item xs={6}>
                     <ListItem button style={{ textAlign: 'center' }}>
                       <ListItemText
-                        primary={
-                          type === 'Doctor' ? 'Logros/Habilidades' : 'Hijos'
-                        }
+                        primary={type === 'Doctor' ? 'Logros' : 'Hijos'}
                         secondary={
                           type === 'Doctor' ? features.length : children.length
                         }
@@ -112,7 +111,12 @@ export default function Summary({
             >
               <NavigateBefore />
             </Button>
-            <Button variant="contained" color="primary" onClick={next}>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={next}
+            >
               <NavigateNext />
             </Button>
           </Grid>

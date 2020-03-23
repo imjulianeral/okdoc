@@ -131,7 +131,7 @@ export default function Children({ nextStep, prevStep, user, setUser }) {
                     style={{ marginTop: '1rem', textAlign: 'center' }}
                   >
                     <RedButton variant="contained" onClick={deleteChild(idx)}>
-                      Borrar <Delete />
+                      <Delete />
                     </RedButton>
                   </Grid>
                 </Paper>
@@ -152,7 +152,12 @@ export default function Children({ nextStep, prevStep, user, setUser }) {
               >
                 <NavigateBefore />
               </Button>
-              <Button variant="contained" color="primary" onClick={next}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={next}
+                disabled={children.length === 0}
+              >
                 <NavigateNext />
               </Button>
             </Grid>

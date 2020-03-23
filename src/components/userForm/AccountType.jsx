@@ -33,13 +33,6 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
     nextStep()
   }
 
-  const handleDateChange = date => {
-    setUser({
-      ...user,
-      birthday: new Date(date),
-    })
-  }
-
   return (
     <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
       <MuiPickersUtilsProvider
@@ -66,34 +59,10 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
                 views={['year', 'month', 'date']}
                 value={user.birthday}
                 defaultValue={moment().format('DD/MM/YYYY')}
-                onChange={handleDateChange}
+                onChange={handleChange}
               />
             </Grid>
             <Grid item xs={12} style={{ marginTop: '1rem' }}>
-              <FormControl
-                variant="outlined"
-                required
-                className={classes.formControl}
-              >
-                <InputLabel id="type">Tipo de Cuenta</InputLabel>
-                <Select
-                  labelId="type"
-                  id="type"
-                  name="type"
-                  value={user.type}
-                  onChange={handleChange}
-                  label="Tipo de Cuenta"
-                >
-                  <MenuItem value="">
-                    <em>Seleccionar:</em>
-                  </MenuItem>
-                  <MenuItem value="Paciente">Paciente</MenuItem>
-                  <MenuItem value="Doctor">Doctor</MenuItem>
-                </Select>
-                <FormHelperText>Doctor o Paciente</FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12}>
               <FormControl className={classes.formControl}>
                 <TextField
                   required
@@ -109,7 +78,61 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Button variant="contained" color="primary" onClick={next}>
+              <FormControl
+                variant="outlined"
+                required
+                className={classes.formControl}
+              >
+                <InputLabel id="type">Tipo de Cuenta</InputLabel>
+                <Select
+                  labelId="type"
+                  id="type"
+                  name="type"
+                  value={user.type}
+                  onChange={handleChange}
+                  label="Tipo de Cuenta"
+                  style={{ minWidth: '15.5rem' }}
+                >
+                  <MenuItem value="">
+                    <em>Seleccionar:</em>
+                  </MenuItem>
+                  <MenuItem value="Paciente">Paciente</MenuItem>
+                  <MenuItem value="Doctor">Doctor</MenuItem>
+                </Select>
+                <FormHelperText>Doctor o Paciente</FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} style={{ marginTop: '1rem' }}>
+              <FormControl
+                variant="outlined"
+                required
+                className={classes.formControl}
+                error
+              >
+                <InputLabel id="city">Ciudad</InputLabel>
+                <Select
+                  disabled
+                  labelId="city"
+                  id="city"
+                  name="city"
+                  value={user.city}
+                  label="Tipo de Cuenta"
+                >
+                  <MenuItem value={user.city}>{user.city}</MenuItem>
+                </Select>
+                <FormHelperText>
+                  Debes de residir en Aguascalientes, México. De otra forma
+                  cerraremos tu cuenta
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={next}
+                disabled={!user.type || !user.phone || !user.birthday}
+              >
                 <NavigateNext />
               </Button>
             </Grid>

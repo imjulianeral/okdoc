@@ -4,12 +4,13 @@ import {
   createMuiTheme,
 } from '@material-ui/core/styles'
 import red from '@material-ui/core/colors/red'
-import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
 
 export const formStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: '15.5rem',
+    minwidth: '15rem',
+    maxWidth: '16rem',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -57,4 +58,4 @@ export const RedButton = withStyles(theme => ({
       backgroundColor: red[700],
     },
   },
-}))(Button)
+}))(IconButton)

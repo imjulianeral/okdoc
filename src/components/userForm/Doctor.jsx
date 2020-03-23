@@ -1,6 +1,4 @@
-import React, { useState, useContext } from 'react'
-import { FirebaseContext } from '../../firebase/context'
-
+import React, { useState } from 'react'
 import {
   Container,
   Paper,
@@ -18,8 +16,7 @@ import {
 } from '@material-ui/icons'
 import { formStyles, RedButton } from '../material/Material.config'
 
-export default function Doctor({ nextStep, prevStep, user, setUser, uid }) {
-  const { firebase } = useContext(FirebaseContext)
+export default function Doctor({ nextStep, prevStep, user, setUser }) {
   const [features, setFeature] = useState(user.features)
   const classes = formStyles()
   const next = e => {
@@ -29,8 +26,6 @@ export default function Doctor({ nextStep, prevStep, user, setUser, uid }) {
       ...user,
       features,
     })
-
-    console.log(user.cv)
   }
   const back = e => {
     e.preventDefault()
@@ -89,14 +84,14 @@ export default function Doctor({ nextStep, prevStep, user, setUser, uid }) {
                         required
                         variant="outlined"
                         id="standard-basic"
-                        label="Escribe un logro destacado"
+                        label="Escribe un logro"
                         value={feature.name}
                         onChange={handleFeatureChange(idx)}
                       />
                     </FormControl>
                   </Grid>
                   <Grid item xs={2}>
-                    <RedButton variant="contained" onClick={deleteFeature(idx)}>
+                    <RedButton aria-label="delete" onClick={deleteFeature(idx)}>
                       <Delete />
                     </RedButton>
                   </Grid>
@@ -138,7 +133,13 @@ export default function Doctor({ nextStep, prevStep, user, setUser, uid }) {
             >
               <NavigateBefore />
             </Button>
-            <Button variant="contained" color="primary" onClick={next}>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={next}
+              disabled={features.length === 0 || !user.cv}
+            >
               <NavigateNext />
             </Button>
           </Grid>
