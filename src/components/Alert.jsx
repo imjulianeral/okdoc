@@ -1,9 +1,10 @@
 import React from 'react'
 
 import { useSnackbar } from 'notistack'
-import { Grow, Button } from '@material-ui/core'
+import { Grow, IconButton } from '@material-ui/core'
+import { Cancel } from '@material-ui/icons'
 
-export default function Alert({ text, variant, idx }) {
+export default function Alert({ text, variant }) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   return enqueueSnackbar(text, {
@@ -13,16 +14,15 @@ export default function Alert({ text, variant, idx }) {
     transitionDuration: 1000,
     preventDuplicate: true,
     persist: true,
-    key: <p style={{ display: 'none' }}>{idx}</p>,
+    key: key => <p style={{ display: 'none' }}>{key}</p>,
     action: key => (
-      <Button
+      <IconButton
         onClick={() => {
           closeSnackbar(key)
         }}
-        style={{ color: 'white' }}
       >
-        Cerrar
-      </Button>
+        <Cancel />
+      </IconButton>
     ),
   })
 }

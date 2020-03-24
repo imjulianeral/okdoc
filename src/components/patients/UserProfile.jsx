@@ -10,11 +10,12 @@ import ProfileForm from '../userForm/ProfileForm'
 
 export default function UserProfile() {
   const [userRecord, setUserRecord] = useState()
+  const [isLoading, setIsLoading] = useState(true)
   const { firebase } = useContext(FirebaseContext)
   const user = useAuth()
 
   useEffect(() => {
-    if (!firebase) return
+    if (!firebase.apps) return
     firebase.auth().onAuthStateChanged(user => {
       if (!user) return navigate('login')
       if (user !== null) {
@@ -25,13 +26,14 @@ export default function UserProfile() {
             .get()
 
           setUserRecord(userData.data())
+          setIsLoading(false)
         }
         fetchUserData()
       }
     })
   }, [firebase])
 
-  if (!user) return <Spinner />
+  if (!user || isLoading) return <Spinner />
 
   return (
     <>

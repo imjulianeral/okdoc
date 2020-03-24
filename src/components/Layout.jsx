@@ -5,7 +5,6 @@ import { useStaticQuery, graphql } from 'gatsby'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { CssBaseline } from '@material-ui/core'
 import { theme } from './material/Material.config'
-
 import { SnackbarProvider } from 'notistack'
 
 import Header from './Header'

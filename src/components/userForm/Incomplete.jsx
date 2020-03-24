@@ -3,7 +3,6 @@ import { Grid, Button } from '@material-ui/core'
 import { NavigateBefore } from '@material-ui/icons'
 
 import Alert from '../Alert'
-import Spinner from '../Spinner'
 
 export default function Incomplete({ errors, prevStep }) {
   const [errorArray, setErrorArray] = useState([])
@@ -35,7 +34,7 @@ export default function Incomplete({ errors, prevStep }) {
       </Grid>
       {errorArray &&
         errorArray.map((error, idx) => (
-          <Alert key={idx} idx={idx} text={error} variant="error" />
+          <Alert key={idx} text={error} variant="error" />
         ))}
     </Grid>
   )
