@@ -1,7 +1,6 @@
 import { fireConfig } from './config'
 
 let app, uiConfig
-
 ;(async () => {
   if (typeof window !== 'undefined') {
     app = await import('firebase/app')
@@ -11,7 +10,7 @@ let app, uiConfig
     await import('firebase/storage')
     await import('firebase/analytics')
 
-    app.initializeApp(fireConfig)
+    if (!app.apps.length) app.initializeApp(fireConfig)
     uiConfig = {
       // Popup signin flow rather than redirect flow.
       signInFlow: 'popup',

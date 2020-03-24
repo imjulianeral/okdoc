@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { NavigateBefore } from '@material-ui/icons'
 
 import Alert from '../Alert'
+import Spinner from '../Spinner'
 
 export default function Incomplete({ errors, prevStep }) {
-  const errorArray = Array.from(
-    new Set(Object.values(errors).map(a => a.id))
-  ).map(id => {
-    return Object.values(errors).find(a => a.id === id)
-  })
+  const [errorArray, setErrorArray] = useState([])
+
+  useEffect(() => {
+    setErrorArray(Object.values(errors))
+  }, [])
+
   const back = e => {
     e.preventDefault()
     prevStep()
@@ -32,9 +34,7 @@ export default function Incomplete({ errors, prevStep }) {
         </Button>
       </Grid>
       {errorArray &&
-        errorArray.map(error => (
-          <Alert notifications={error} variant="error" />
-        ))}
+        errorArray.map(error => <Alert text={error} variant="error" />)}
     </Grid>
   )
 }

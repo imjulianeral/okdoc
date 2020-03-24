@@ -6,7 +6,7 @@ import {
   Grid,
   FormControl,
   FormHelperText,
-  InputLabel,
+  Grow,
   TextField,
   Button,
 } from '@material-ui/core'
@@ -81,88 +81,101 @@ export default function Children({ nextStep, prevStep, user, setUser }) {
         utils={MomentUtils}
         locale={moment.locale('es')}
       >
-        <Paper style={{ padding: '1rem' }}>
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={12}>
-              <h2 style={{ color: '#163a5f' }}>Añade el perfil de tus hijos</h2>
-            </Grid>
-            {children.map((child, idx) => {
-              return (
-                <Paper
-                  style={{ padding: '1rem', marginTop: '1rem' }}
-                  variant="outlined"
-                  key={idx}
-                >
-                  <Grid item xs={12}>
-                    <FormControl className={classes.formControl}>
-                      <TextField
-                        required
-                        variant="outlined"
-                        id="standard-basic"
-                        label="Nombre de tu hijo"
-                        value={child.name}
-                        onChange={handleChildChange(idx)}
-                      />
-                      <FormHelperText>
-                        No es necesario escribir el nombre completo
-                      </FormHelperText>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <KeyboardDatePicker
-                      disableFuture
-                      openTo="year"
-                      format="DD/MM/YYYY"
-                      label="Fecha de Nacimiento de tu hijo"
-                      views={['year', 'month', 'date']}
-                      value={child.birthday}
-                      defaultValue={moment().format('DD/MM/YYYY')}
-                      onChange={handleDateChange(idx)}
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    style={{ marginTop: '1rem', textAlign: 'center' }}
+        <Grow
+          in={true}
+          style={{ transformOrigin: '0 0 0' }}
+          {...(true ? { timeout: 1000 } : {})}
+        >
+          <Paper style={{ padding: '1rem' }}>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={12}>
+                <h2 style={{ color: '#163a5f' }}>
+                  Añade el perfil de tus hijos
+                </h2>
+              </Grid>
+              {children.map((child, idx) => {
+                return (
+                  <Paper
+                    style={{ padding: '1rem', marginTop: '1rem' }}
+                    variant="outlined"
+                    key={idx}
                   >
-                    <RedButton variant="contained" onClick={deleteChild(idx)}>
-                      <Delete />
-                    </RedButton>
-                  </Grid>
-                </Paper>
-              )
-            })}
-            <Grid item xs={12} style={{ marginTop: '2rem' }} onClick={addChild}>
-              <Button variant="outlined" color="primary">
-                <Add />
-                <ChildCare />
-              </Button>
-            </Grid>
-            <Grid item xs={12} style={{ marginTop: '2rem' }}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={back}
-                style={{ marginRight: '1rem' }}
+                    <Grid item xs={12}>
+                      <FormControl className={classes.formControl}>
+                        <TextField
+                          required
+                          variant="outlined"
+                          id="standard-basic"
+                          label="Nombre de tu hijo"
+                          value={child.name}
+                          onChange={handleChildChange(idx)}
+                        />
+                        <FormHelperText>
+                          No es necesario escribir el nombre completo
+                        </FormHelperText>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <KeyboardDatePicker
+                        disableFuture
+                        openTo="year"
+                        format="DD/MM/YYYY"
+                        label="Fecha de Nacimiento de tu hijo"
+                        views={['year', 'month', 'date']}
+                        value={child.birthday}
+                        defaultValue={moment().format('DD/MM/YYYY')}
+                        onChange={handleDateChange(idx)}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      style={{ marginTop: '1rem', textAlign: 'center' }}
+                    >
+                      <RedButton variant="contained" onClick={deleteChild(idx)}>
+                        <Delete />
+                      </RedButton>
+                    </Grid>
+                  </Paper>
+                )
+              })}
+              <Grid
+                item
+                xs={12}
+                style={{ marginTop: '2rem' }}
+                onClick={addChild}
               >
-                <NavigateBefore />
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={next}
-                disabled={children.length === 0}
-              >
-                <NavigateNext />
-              </Button>
+                <Button variant="outlined" color="primary">
+                  <Add />
+                  <ChildCare />
+                </Button>
+              </Grid>
+              <Grid item xs={12} style={{ marginTop: '2rem' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={back}
+                  style={{ marginRight: '1rem' }}
+                >
+                  <NavigateBefore />
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={next}
+                  disabled={children.length === 0}
+                >
+                  <NavigateNext />
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Grow>
       </MuiPickersUtilsProvider>
     </Container>
   )

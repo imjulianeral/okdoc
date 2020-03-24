@@ -17,7 +17,7 @@ export default function validateCreateAccount(values) {
     errors.phone = 'El teléfono debe de tener al menos 10 digitos'
 
   if (values.children.length === 0 && values.type === 'Paciente')
-    errors.children = 'Debes de agregar la información de tus hijos'
+    errors.children = 'Debes de agregar a tus hijos'
 
   values.children.forEach(child => {
     if (

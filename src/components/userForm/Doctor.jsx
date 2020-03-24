@@ -6,6 +6,7 @@ import {
   FormControl,
   TextField,
   Button,
+  Grow,
 } from '@material-ui/core'
 import {
   NavigateNext,
@@ -62,89 +63,108 @@ export default function Doctor({ nextStep, prevStep, user, setUser }) {
 
   return (
     <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
-      <Paper style={{ padding: '1rem' }}>
-        <Grid container direction="column" justify="center" alignItems="center">
-          <Grid item xs={12}>
-            <h2 style={{ color: '#163a5f' }}>
-              Añade tu experiencia profesional
-            </h2>
-          </Grid>
-          {features.map((feature, idx) => {
-            return (
-              <Paper style={{ padding: '1rem' }} variant="outlined" key={idx}>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
+      <Grow
+        in={true}
+        style={{ transformOrigin: '0 0 0' }}
+        {...(true ? { timeout: 1000 } : {})}
+      >
+        <Paper style={{ padding: '1rem' }}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={12}>
+              <h2 style={{ color: '#163a5f' }}>
+                Añade tu experiencia profesional
+              </h2>
+            </Grid>
+            {features.map((feature, idx) => {
+              return (
+                <Paper style={{ padding: '1rem' }} variant="outlined" key={idx}>
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    <Grid item xs={10}>
+                      <FormControl className={classes.formControl}>
+                        <TextField
+                          required
+                          variant="outlined"
+                          id="standard-basic"
+                          label="Escribe un logro"
+                          value={feature.name}
+                          onChange={handleFeatureChange(idx)}
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <RedButton
+                        aria-label="delete"
+                        onClick={deleteFeature(idx)}
+                      >
+                        <Delete />
+                      </RedButton>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              )
+            })}
+            <Grid
+              item
+              xs={12}
+              style={{ marginTop: '2rem' }}
+              onClick={addFeature}
+            >
+              <Button variant="outlined" color="primary">
+                <Add />
+              </Button>
+            </Grid>
+            <Grid item xs={12} style={{ marginTop: '2rem' }}>
+              <input
+                accept="application/pdf"
+                className={classes.input}
+                id="contained-button-file"
+                multiple
+                type="file"
+                onChange={fileSelectedHandler}
+              />
+              <label htmlFor="contained-button-file">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  component="span"
+                  startIcon={<CloudUpload />}
                 >
-                  <Grid item xs={10}>
-                    <FormControl className={classes.formControl}>
-                      <TextField
-                        required
-                        variant="outlined"
-                        id="standard-basic"
-                        label="Escribe un logro"
-                        value={feature.name}
-                        onChange={handleFeatureChange(idx)}
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <RedButton aria-label="delete" onClick={deleteFeature(idx)}>
-                      <Delete />
-                    </RedButton>
-                  </Grid>
-                </Grid>
-              </Paper>
-            )
-          })}
-          <Grid item xs={12} style={{ marginTop: '2rem' }} onClick={addFeature}>
-            <Button variant="outlined" color="primary">
-              <Add />
-            </Button>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: '2rem' }}>
-            <input
-              accept="application/pdf"
-              className={classes.input}
-              id="contained-button-file"
-              multiple
-              type="file"
-              onChange={fileSelectedHandler}
-            />
-            <label htmlFor="contained-button-file">
+                  CV
+                </Button>
+              </label>
+            </Grid>
+            <Grid item xs={12} style={{ marginTop: '2rem' }}>
               <Button
                 variant="contained"
-                color="secondary"
-                component="span"
-                startIcon={<CloudUpload />}
+                color="primary"
+                onClick={back}
+                style={{ marginRight: '1rem' }}
               >
-                CV
+                <NavigateBefore />
               </Button>
-            </label>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                onClick={next}
+                disabled={features.length === 0 || !user.cv}
+              >
+                <NavigateNext />
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={12} style={{ marginTop: '2rem' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={back}
-              style={{ marginRight: '1rem' }}
-            >
-              <NavigateBefore />
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={next}
-              disabled={features.length === 0 || !user.cv}
-            >
-              <NavigateNext />
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
+      </Grow>
     </Container>
   )
 }

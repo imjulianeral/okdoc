@@ -1,8 +1,8 @@
-import React from 'react'
 import { useSnackbar } from 'notistack'
 
-export default function Alert({ notifications, variant }) {
+export default function Alert({ text, variant }) {
   const { enqueueSnackbar } = useSnackbar()
+  const Alert = enqueueSnackbar(text, { variant })
 
-  return <>{enqueueSnackbar(notifications, { variant })}</>
+  return Alert
 }
