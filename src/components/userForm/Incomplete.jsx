@@ -34,7 +34,9 @@ export default function Incomplete({ errors, prevStep }) {
         </Button>
       </Grid>
       {errorArray &&
-        errorArray.map(error => <Alert text={error} variant="error" />)}
+        errorArray.map((error, idx) => (
+          <Alert key={idx} idx={idx} text={error} variant="error" />
+        ))}
     </Grid>
   )
 }

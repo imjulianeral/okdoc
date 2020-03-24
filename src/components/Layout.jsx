@@ -25,16 +25,16 @@ function Layout({ children }) {
   `)
 
   return (
-    <SnackbarProvider maxSnack={10}>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={10}>
         <CssBaseline />
         <Header siteTitle={data.site.siteMetadata.title} />
         <main>{children}</main>
         <footer style={{ marginTop: '20rem' }}>
           Todos los derechos reservados &copy; {new Date().getFullYear()}
         </footer>
-      </ThemeProvider>
-    </SnackbarProvider>
+      </SnackbarProvider>
+    </ThemeProvider>
   )
 }
 
