@@ -128,7 +128,6 @@ export default function Doctor({ nextStep, prevStep, user, setUser }) {
                 accept="application/pdf"
                 className={classes.input}
                 id="contained-button-file"
-                multiple
                 type="file"
                 onChange={fileSelectedHandler}
               />

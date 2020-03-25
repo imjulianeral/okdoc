@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { FirebaseContext } from '../../firebase/context'
-import useAuth from '../../hooks/useAuth'
 import useFormValidator from '../../hooks/useFormValidator'
 import validateCreateAccount from '../../validation/validateCreateAccount'
 
@@ -12,7 +11,17 @@ import Success from './Success'
 
 export default function ProfileForm() {
   const { firebase } = useContext(FirebaseContext)
-  const authUser = useAuth()
+  const [authUser, setAuthUser] = useState({})
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        setAuthUser(user)
+      } else {
+        setAuthUser(null)
+      }
+    })
+  }, [firebase])
 
   const initialState = {
     birthday: new Date(),
@@ -22,7 +31,7 @@ export default function ProfileForm() {
     type: '',
     status: 'PENDIENTE',
     city: 'Aguascalientes',
-    // available: '',
+    avatar: '',
     stars: '',
     cv: '',
     phone: '',
@@ -46,6 +55,11 @@ export default function ProfileForm() {
   }
 
   async function createProfile() {
+    values.name = authUser.displayName
+    values.email = authUser.email
+    authUser.updateProfile({
+      photoURL: values.avatar,
+    })
     if (values.type === 'Paciente') {
       const { cv, features, children, ...userProfile } = values
       await firebase

@@ -1,6 +1,6 @@
 import { Link } from 'gatsby'
 import PropTypes from 'prop-types'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 
 import {
   AppBar,
@@ -30,19 +30,12 @@ function Header(props) {
   const { firebase } = useContext(FirebaseContext)
   const [anchorEl, setAnchorEl] = useState(null)
   const user = useAuth()
-
   const open = Boolean(anchorEl)
-
   const classes = headerStyles()
-
-  // const handleChange = event => {
-  //   setAuth(event.target.checked)
-  // }
 
   const handleMenu = event => {
     setAnchorEl(event.currentTarget)
   }
-
   const handleClose = () => {
     setAnchorEl(null)
   }

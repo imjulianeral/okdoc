@@ -1,11 +1,13 @@
 import React from 'react'
 
-import { Box, Container, Fab, Toolbar } from '@material-ui/core'
+import { Fab, Toolbar } from '@material-ui/core'
 import { KeyboardArrowUp } from '@material-ui/icons'
 import { ScrollTop } from '../components/material/Header.functions'
 
 import Layout from '../components/Layout'
 import SEO from '../components/SEO'
+
+import '../css/index.css'
 
 const IndexPage = props => (
   <Layout>
@@ -87,6 +89,10 @@ c-22.4,3-38.4,9.2-47.8,18.3c-11.2,10.9-13.6,26.7-16.3,45c-3.1,20.8-6.6,44.4-25.3
     <div className="content flex">
       <p>Servicios</p>
     </div>
+
+    {/* <footer style={{ marginTop: '20rem' }}>
+      Todos los derechos reservados &copy; {new Date().getFullYear()}
+    </footer> */}
     <ScrollTop {...props}>
       <Fab color="secondary" size="small" aria-label="scroll back to top">
         <KeyboardArrowUp />

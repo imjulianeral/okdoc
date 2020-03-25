@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { FirebaseContext } from '../../firebase/context'
+import useAuth from '../../hooks/useAuth'
 
 import {
   Container,
@@ -12,13 +14,16 @@ import {
   MenuItem,
   Button,
   Grow,
+  Avatar,
+  IconButton,
+  Tooltip,
 } from '@material-ui/core'
-import { NavigateNext } from '@material-ui/icons'
+import { NavigateNext, Edit } from '@material-ui/icons'
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers'
-import { formStyles } from '../material/Material.config'
+import { formStyles, avatarStyles } from '../material/Material.config'
 import MomentUtils from '@date-io/moment'
 import moment from 'moment'
 import 'moment/locale/es'
@@ -26,12 +31,32 @@ import 'moment/locale/es'
 moment.locale('es')
 
 export default function AccountType({ nextStep, user, setUser, handleChange }) {
+  const authUser = useAuth()
+  const { firebase } = useContext(FirebaseContext)
   const classes = formStyles()
+  const avatarClasses = avatarStyles()
   const next = e => {
     e.preventDefault()
     if (user.type === 'Paciente') setUser({ ...user, status: 'ACTIVADO' })
     else setUser({ ...user, status: 'PENDIENTE' })
     nextStep()
+  }
+  const fileSelectedHandler = async e => {
+    await firebase
+      .storage()
+      .ref()
+      .child(`avatars/${authUser.uid}`)
+      .put(e.target.files[0])
+
+    const image = await firebase
+      .storage()
+      .ref(`avatars/${authUser.uid}`)
+      .getDownloadURL()
+
+    setUser({
+      ...user,
+      avatar: image,
+    })
   }
 
   return (
@@ -132,12 +157,46 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
                   </FormHelperText>
                 </FormControl>
               </Grid>
+              <Grid
+                item
+                xs={12}
+                style={{ marginTop: '1rem', marginBottom: '2rem' }}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  <Grid item xs={6}>
+                    <Avatar className={avatarClasses.large} src={user.avatar} />
+                  </Grid>
+                  <Grid item xs={6} style={{ marginTop: '4rem' }}>
+                    <input
+                      accept="image/*"
+                      className={classes.input}
+                      id="contained-button-file"
+                      type="file"
+                      onChange={fileSelectedHandler}
+                    />
+                    <Tooltip title="Subir imagen de perfil" placement="right">
+                      <label htmlFor="contained-button-file">
+                        <IconButton component="span">
+                          <Edit />
+                        </IconButton>
+                      </label>
+                    </Tooltip>
+                  </Grid>
+                </Grid>
+              </Grid>
               <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={next}
-                  disabled={!user.type || !user.phone || !user.birthday}
+                  disabled={
+                    !user.type || !user.phone || !user.birthday || !user.avatar
+                  }
                 >
                   <NavigateNext />
                 </Button>

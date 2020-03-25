@@ -7,12 +7,15 @@ import { CssBaseline } from '@material-ui/core'
 import { theme } from './material/Material.config'
 import { SnackbarProvider } from 'notistack'
 
+import useAuth from '../hooks/useAuth'
+
 import Header from './Header'
 
 import '../css/layout.css'
-import '../css/index.css'
+import BottomNav from './BottomNav'
 
 function Layout({ children }) {
+  const user = useAuth()
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -29,9 +32,7 @@ function Layout({ children }) {
         <CssBaseline />
         <Header siteTitle={data.site.siteMetadata.title} />
         <main>{children}</main>
-        <footer style={{ marginTop: '20rem' }}>
-          Todos los derechos reservados &copy; {new Date().getFullYear()}
-        </footer>
+        {user && <BottomNav />}
       </SnackbarProvider>
     </ThemeProvider>
   )

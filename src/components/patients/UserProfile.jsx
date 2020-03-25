@@ -1,15 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { navigate } from 'gatsby'
 
-import { Avatar } from '@material-ui/core'
-
 import { FirebaseContext } from '../../firebase/context'
+
 import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import ProfileForm from '../userForm/ProfileForm'
+import ProfileData from './ProfileData'
 
 export default function UserProfile() {
   const [userRecord, setUserRecord] = useState()
+  const [children, setChildren] = useState()
   const [isLoading, setIsLoading] = useState(true)
   const { firebase } = useContext(FirebaseContext)
   const user = useAuth()
@@ -20,12 +21,18 @@ export default function UserProfile() {
       if (!user) return navigate('login')
       if (user !== null) {
         const fetchUserData = async () => {
-          const userData = await firebase
+          const parent = await firebase.firestore().doc(`/users/${user.uid}`)
+
+          const userData = await parent.get()
+
+          const parentChildren = await firebase
             .firestore()
-            .doc(`/users/${user.uid}`)
+            .collection('children')
+            .where('parent', '==', parent)
             .get()
 
           setUserRecord(userData.data())
+          setChildren(parentChildren)
           setIsLoading(false)
         }
         fetchUserData()
@@ -40,10 +47,7 @@ export default function UserProfile() {
       {typeof userRecord === 'undefined' ? (
         <ProfileForm />
       ) : (
-        <>
-          <h2 style={{ marginTop: '5rem' }}>Bienvenido {user.displayName}</h2>
-          <Avatar alt={user.displayName} src={user.photoURL} />
-        </>
+        <ProfileData user={userRecord} children={children} />
       )}
     </>
   )

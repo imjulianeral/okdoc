@@ -10,7 +10,7 @@ export default function useFormValidator(initialState, validate, fn) {
       if (Object.keys(errors).length === 0) fn()
       setSubmitForm(false)
     }
-  }, [errors])
+  }, [errors, fn, submitForm])
 
   const handleChange = e => {
     if (e.target) {

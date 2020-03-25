@@ -10,7 +10,7 @@ let app, uiConfig
     await import('firebase/storage')
     await import('firebase/analytics')
 
-    if (!app.apps.length) app.initializeApp(fireConfig)
+    if (app.apps.length === 0) app.initializeApp(fireConfig)
     uiConfig = {
       // Popup signin flow rather than redirect flow.
       signInFlow: 'popup',

@@ -14,7 +14,7 @@ export default function Success({ errors, prevStep }) {
         {...(true ? { timeout: 1000 } : {})}
       >
         <Paper style={{ padding: '1rem' }}>
-          {errors !== {} ? (
+          {Object.keys(errors).length !== 0 ? (
             <Incomplete errors={errors} prevStep={prevStep} />
           ) : (
             <Completed />

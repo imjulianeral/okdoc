@@ -9,7 +9,7 @@ export default function Incomplete({ errors, prevStep }) {
 
   useEffect(() => {
     setErrorArray(Object.values(errors))
-  }, [])
+  }, [errors])
 
   const back = e => {
     e.preventDefault()
