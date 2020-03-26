@@ -1,47 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'gatsby'
 
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core'
 import { Favorite, LocalHospital, Event, PersonPin } from '@material-ui/icons'
+import { navBottomStyles } from './material/Material.config'
 
 export default function BottomNav() {
-  const [value, setValue] = React.useState(3)
+  const [value, setValue] = useState()
+  const classes = navBottomStyles()
 
   return (
-    <>
-      <BottomNavigation
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue)
-        }}
-        showLabels
-        className="footer"
-      >
-        <BottomNavigationAction
-          component={Link}
-          to="/favoritos"
-          label="Favoritos"
-          icon={<Favorite />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/doctores"
-          label="Doctores"
-          icon={<LocalHospital />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/citas"
-          label="Citas"
-          icon={<Event />}
-        />
-        <BottomNavigationAction
-          component={Link}
-          to="/perfil"
-          label="Perfil"
-          icon={<PersonPin />}
-        />
-      </BottomNavigation>
-    </>
+    <BottomNavigation
+      value={value}
+      showLabels
+      // onChange={(event, newValue) => {
+      //   setValue(newValue)
+      // }}
+      className={classes.stickToBottom}
+    >
+      <BottomNavigationAction
+        onMouseEnter={() => setValue(0)}
+        component={Link}
+        to={'/app/favoritos'}
+        label="Favoritos"
+        icon={<Favorite />}
+      />
+      <BottomNavigationAction
+        onMouseEnter={() => setValue(1)}
+        component={Link}
+        to={'/app/doctores'}
+        label="Doctores"
+        icon={<LocalHospital />}
+      />
+      <BottomNavigationAction
+        onMouseEnter={() => setValue(2)}
+        component={Link}
+        to={'/app/citas'}
+        label="Citas"
+        icon={<Event />}
+      />
+      <BottomNavigationAction
+        onMouseEnter={() => setValue(3)}
+        component={Link}
+        to={'/app/perfil'}
+        label="Perfil"
+        icon={<PersonPin />}
+      />
+    </BottomNavigation>
   )
 }

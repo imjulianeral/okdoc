@@ -14,7 +14,6 @@ import { avatarStyles } from '../material/Material.config'
 import moment from 'moment'
 
 export default function ProfileData({ user, children }) {
-  console.log(children.docs)
   const classes = avatarStyles()
   return (
     <Container maxWidth="xs" style={{ marginTop: '7rem' }}>

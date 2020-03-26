@@ -20,6 +20,14 @@ export const formStyles = makeStyles(theme => ({
   },
 }))
 
+export const navBottomStyles = makeStyles(theme => ({
+  stickToBottom: {
+    width: '100%',
+    position: 'fixed',
+    bottom: 0,
+  },
+}))
+
 export const avatarStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -30,6 +38,11 @@ export const avatarStyles = makeStyles(theme => ({
   small: {
     width: theme.spacing(3),
     height: theme.spacing(3),
+  },
+  medium: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+    marginRight: theme.spacing(3),
   },
   large: {
     width: theme.spacing(10),

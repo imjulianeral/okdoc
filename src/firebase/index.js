@@ -19,7 +19,7 @@ let app, uiConfig
         app.auth.GoogleAuthProvider.PROVIDER_ID,
         app.auth.EmailAuthProvider.PROVIDER_ID,
       ],
-      signInSuccessUrl: '/perfil',
+      signInSuccessUrl: '/app/perfil',
     }
   }
 })()

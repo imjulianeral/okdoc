@@ -97,7 +97,7 @@ function Header(props) {
               onClose={handleClose}
             >
               <Link
-                to="/perfil"
+                to="/app/perfil"
                 style={{ textDecoration: 'none', color: '#000' }}
               >
                 <MenuItem onClick={handleClose}>

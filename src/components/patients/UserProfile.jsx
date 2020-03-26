@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { navigate } from 'gatsby'
+import { Container } from '@material-ui/core'
 
 import { FirebaseContext } from '../../firebase/context'
 
@@ -7,6 +8,7 @@ import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import ProfileForm from '../userForm/ProfileForm'
 import ProfileData from './ProfileData'
+import SEO from '../SEO'
 
 export default function UserProfile() {
   const [userRecord, setUserRecord] = useState()
@@ -16,7 +18,6 @@ export default function UserProfile() {
   const user = useAuth()
 
   useEffect(() => {
-    if (!firebase.apps) return
     firebase.auth().onAuthStateChanged(user => {
       if (!user) return navigate('login')
       if (user !== null) {
@@ -43,12 +44,14 @@ export default function UserProfile() {
   if (!user || isLoading) return <Spinner />
 
   return (
-    <>
+    <Container>
+      <SEO title="Perfil" />
+
       {typeof userRecord === 'undefined' ? (
         <ProfileForm />
       ) : (
         <ProfileData user={userRecord} children={children} />
       )}
-    </>
+    </Container>
   )
 }
