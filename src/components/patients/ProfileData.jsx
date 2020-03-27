@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Button,
 } from '@material-ui/core'
 import { avatarStyles } from '../material/Material.config'
 
@@ -15,8 +16,9 @@ import moment from 'moment'
 
 export default function ProfileData({ user, children }) {
   const classes = avatarStyles()
+
   return (
-    <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
+    <Container maxWidth="xs" style={{ marginTop: '5rem' }}>
       <Grow
         in={true}
         style={{ transformOrigin: '0 0 0' }}
@@ -81,16 +83,16 @@ export default function ProfileData({ user, children }) {
                       secondary={
                         user.type === 'Doctor'
                           ? user.features.length
-                          : children.docs.map((child, idx) => (
+                          : children.map((child, idx) => (
                               <ListItem button key={idx}>
                                 <ListItemText
                                   primary="Nombre"
-                                  secondary={child.data().name}
+                                  secondary={child.name}
                                 />
                                 <ListItemText
                                   primary="Edad"
                                   secondary={moment().diff(
-                                    child.data().birthday.toDate(),
+                                    child.birthday.toDate(),
                                     'years'
                                   )}
                                 />
@@ -105,11 +107,21 @@ export default function ProfileData({ user, children }) {
                     <ListItem button style={{ textAlign: 'center' }}>
                       <ListItemText
                         primary="Estado de tu cuenta"
-                        secondary="Al ser tu cuenta de tipo Doctor tenemos que revisar tu curriculum para luego proceder a una entrevista"
+                        secondary={user.status}
                       />
                     </ListItem>
                   </Grid>
                 )}
+                <Grid item xs={12}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    href="/app/editar-perfil"
+                    style={{ textAlign: 'center', display: 'block' }}
+                  >
+                    Editar Perfil
+                  </Button>
+                </Grid>
               </Grid>
             </List>
           </Grid>

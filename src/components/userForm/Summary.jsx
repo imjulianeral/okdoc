@@ -14,15 +14,14 @@ import { NavigateNext, NavigateBefore } from '@material-ui/icons'
 
 import moment from 'moment'
 
-import useAuth from '../../hooks/useAuth'
-
 export default function Summary({
-  user: { birthday, type, children, features, phone },
+  user: { birthday, type, children, features, phone, avatar, name },
   nextStep,
   prevStep,
   handleSubmit,
+  userRecord,
+  authUser,
 }) {
-  const user = useAuth()
   const next = e => {
     e.preventDefault()
     handleSubmit()
@@ -63,7 +62,7 @@ export default function Summary({
                       <ListItem button style={{ textAlign: 'center' }}>
                         <ListItemText
                           primary="Nombre"
-                          secondary={user ? user.displayName : null}
+                          secondary={name ? name : authUser.displayName}
                         />
                       </ListItem>
                     </Grid>
@@ -71,7 +70,11 @@ export default function Summary({
                       <ListItem button style={{ textAlign: 'center' }}>
                         <ListItemText
                           primary="Edad"
-                          secondary={moment().diff(birthday, 'years')}
+                          secondary={
+                            typeof userRecord !== 'undefined'
+                              ? moment().diff(birthday.toDate(), 'years')
+                              : moment().diff(birthday, 'years')
+                          }
                         />
                       </ListItem>
                     </Grid>
@@ -103,7 +106,7 @@ export default function Summary({
                         />
                       </ListItem>
                     </Grid>
-                    {type === 'Doctor' && (
+                    {type === 'Doctor' && !avatar && (
                       <Grid item xs={12}>
                         <ListItem button style={{ textAlign: 'center' }}>
                           <ListItemText

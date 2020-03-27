@@ -8,7 +8,7 @@ export default function Completed() {
         <h2 style={{ color: '#163a5f' }}>Tu perfil ha sido completado</h2>
       </Grid>
       <Grid item xs={12}>
-        <Button variant="contained" color="primary" href="/perfil">
+        <Button variant="contained" color="primary" href="/app/perfil">
           Ver perfil
         </Button>
       </Grid>

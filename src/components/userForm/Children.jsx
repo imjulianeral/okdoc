@@ -27,8 +27,8 @@ import {
   Delete,
 } from '@material-ui/icons'
 
-export default function Children({ nextStep, prevStep, user, setUser }) {
-  const [children, setChildren] = useState(user.children)
+export default function Children({ nextStep, prevStep, user, setUser, boys }) {
+  const [children, setChildren] = useState(boys ? boys : user.children)
   const classes = formStyles()
 
   const next = e => {
@@ -75,7 +75,10 @@ export default function Children({ nextStep, prevStep, user, setUser }) {
   }
 
   return (
-    <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
+    <Container
+      maxWidth="xs"
+      style={{ marginTop: '5rem', marginBottom: '5rem' }}
+    >
       <MuiPickersUtilsProvider
         libInstance={moment}
         utils={MomentUtils}
@@ -127,20 +130,27 @@ export default function Children({ nextStep, prevStep, user, setUser }) {
                         format="DD/MM/YYYY"
                         label="Fecha de Nacimiento de tu hijo"
                         views={['year', 'month', 'date']}
-                        value={child.birthday}
+                        value={
+                          child.id ? child.birthday.toDate() : child.birthday
+                        }
                         defaultValue={moment().format('DD/MM/YYYY')}
                         onChange={handleDateChange(idx)}
                       />
                     </Grid>
-                    <Grid
-                      item
-                      xs={12}
-                      style={{ marginTop: '1rem', textAlign: 'center' }}
-                    >
-                      <RedButton variant="contained" onClick={deleteChild(idx)}>
-                        <Delete />
-                      </RedButton>
-                    </Grid>
+                    {boys.length === 0 && (
+                      <Grid
+                        item
+                        xs={12}
+                        style={{ marginTop: '1rem', textAlign: 'center' }}
+                      >
+                        <RedButton
+                          variant="contained"
+                          onClick={deleteChild(idx)}
+                        >
+                          <Delete />
+                        </RedButton>
+                      </Grid>
+                    )}
                   </Paper>
                 )
               })}

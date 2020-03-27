@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { Link, navigate } from 'gatsby'
 import { FirebaseContext } from '../../firebase/context'
 import useAuth from '../../hooks/useAuth'
+import useDoctors from '../../hooks/useDoctors'
 
 import {
   Container,
@@ -19,34 +20,17 @@ import { avatarStyles } from '../material/Material.config'
 import Spinner from '../Spinner'
 
 export default function DoctorsList() {
-  const [doctors, setDoctors] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
   const { firebase } = useContext(FirebaseContext)
   const user = useAuth()
+  const { doctors, isLoading } = useDoctors('createdAt')
 
   const classes = avatarStyles()
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => {
       if (!user) return navigate('login')
-
-      const getDocs = async () => {
-        const docs = await firebase
-          .firestore()
-          .collection('users')
-          .where('type', '==', 'Doctor')
-          .get()
-
-        setDoctors(
-          docs.docs.map(doctor => {
-            return { id: doctor.id, ...doctor.data() }
-          })
-        )
-        setIsLoading(false)
-      }
-      getDocs()
     })
-  }, [firebase, user])
+  }, [firebase])
 
   if (!user || isLoading) return <Spinner />
 
@@ -66,7 +50,7 @@ export default function DoctorsList() {
                     button
                     key={doctor.id}
                     component={Link}
-                    to={`/doctor/${doctor.id}`}
+                    to={`/app/doctor/${doctor.id}`}
                   >
                     <ListItemAvatar>
                       <Avatar src={doctor.avatar} className={classes.medium} />

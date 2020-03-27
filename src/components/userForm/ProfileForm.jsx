@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { FirebaseContext } from '../../firebase/context'
+import useProfile from '../../hooks/useProfile'
 import useFormValidator from '../../hooks/useFormValidator'
 import validateCreateAccount from '../../validation/validateCreateAccount'
 
@@ -11,18 +12,9 @@ import Success from './Success'
 
 export default function ProfileForm() {
   const { firebase } = useContext(FirebaseContext)
+  const [formStep, setFormStep] = useState(1)
   const [authUser, setAuthUser] = useState({})
-
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        setAuthUser(user)
-      } else {
-        setAuthUser(null)
-      }
-    })
-  }, [firebase])
-
+  const { userRecord, children, isLoading } = useProfile()
   const initialState = {
     birthday: new Date(),
     children: [],
@@ -35,9 +27,8 @@ export default function ProfileForm() {
     stars: '',
     cv: '',
     phone: '',
+    name: '',
   }
-
-  const [formStep, setFormStep] = useState(1)
   const {
     errors,
     values,
@@ -45,6 +36,18 @@ export default function ProfileForm() {
     handleChange,
     handleSubmit,
   } = useFormValidator(initialState, validateCreateAccount, createProfile)
+
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        setAuthUser(user)
+      } else {
+        setAuthUser(null)
+      }
+    })
+
+    if (userRecord) setValues(userRecord)
+  }, [firebase, userRecord])
 
   const nextStep = () => {
     setFormStep(formStep + 1)
@@ -55,11 +58,12 @@ export default function ProfileForm() {
   }
 
   async function createProfile() {
-    values.name = authUser.displayName
+    values.name = values.name ? values.name : authUser.displayName
     values.email = authUser.email
-    authUser.updateProfile({
+    await authUser.updateProfile({
       photoURL: values.avatar,
     })
+
     if (values.type === 'Paciente') {
       const { cv, features, children, ...userProfile } = values
       await firebase
@@ -76,10 +80,12 @@ export default function ProfileForm() {
       })
 
       for (let i = 0; i < boysAssigned.length; i++) {
-        await firebase
-          .firestore()
-          .collection(`children`)
-          .add(boysAssigned[i])
+        if (!boysAssigned[i].id) {
+          await firebase
+            .firestore()
+            .collection(`children`)
+            .add(boysAssigned[i])
+        }
       }
 
       const parentChildren = await firebase
@@ -97,17 +103,33 @@ export default function ProfileForm() {
       })
     }
 
-    if (values.type === 'Doctor' && typeof values.cv !== 'undefined') {
+    if (values.type === 'Doctor') {
       const { children, cv, ...userProfile } = values
-      await firebase
-        .firestore()
-        .doc(`users/${authUser.uid}`)
-        .set(userProfile)
-      await firebase
-        .storage()
-        .ref()
-        .child(`doctors/${authUser.uid}`)
-        .put(cv)
+      const doctor = await firebase.firestore().doc(`/users/${authUser.uid}`)
+      const userData = await doctor.get()
+
+      console.log(userData.data())
+
+      if (typeof userData.data() !== 'undefined') {
+        await doctor.update({
+          ...userProfile,
+        })
+        await firebase
+          .storage()
+          .ref()
+          .child(`doctors/${authUser.uid}`)
+          .put(cv)
+      } else {
+        await firebase
+          .firestore()
+          .doc(`users/${authUser.uid}`)
+          .set(userProfile)
+        await firebase
+          .storage()
+          .ref()
+          .child(`doctors/${authUser.uid}`)
+          .put(cv)
+      }
     }
   }
 
@@ -119,6 +141,8 @@ export default function ProfileForm() {
           handleChange={handleChange}
           user={values}
           setUser={setValues}
+          isLoading={isLoading}
+          userRecord={userRecord}
         />
       )
     case 2:
@@ -131,6 +155,7 @@ export default function ProfileForm() {
               handleChange={handleChange}
               user={values}
               setUser={setValues}
+              boys={children}
             />
           ) : (
             <Doctor
@@ -150,6 +175,8 @@ export default function ProfileForm() {
           nextStep={nextStep}
           prevStep={prevStep}
           user={values}
+          userRecord={userRecord}
+          authUser={authUser}
         />
       )
     case 4:

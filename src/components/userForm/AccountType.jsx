@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { FirebaseContext } from '../../firebase/context'
 import useAuth from '../../hooks/useAuth'
 
@@ -27,10 +27,18 @@ import { formStyles, avatarStyles } from '../material/Material.config'
 import MomentUtils from '@date-io/moment'
 import moment from 'moment'
 import 'moment/locale/es'
+import Spinner from '../Spinner'
 
 moment.locale('es')
 
-export default function AccountType({ nextStep, user, setUser, handleChange }) {
+export default function AccountType({
+  nextStep,
+  user,
+  setUser,
+  handleChange,
+  isLoading,
+  userRecord,
+}) {
   const authUser = useAuth()
   const { firebase } = useContext(FirebaseContext)
   const classes = formStyles()
@@ -38,6 +46,7 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
   const next = e => {
     e.preventDefault()
     if (user.type === 'Paciente') setUser({ ...user, status: 'ACTIVADO' })
+    else if (user.type === 'Doctor' && user.avatar !== '') setUser({ ...user })
     else setUser({ ...user, status: 'PENDIENTE' })
     nextStep()
   }
@@ -59,8 +68,9 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
     })
   }
 
+  if (isLoading) return <Spinner />
   return (
-    <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
+    <Container maxWidth="xs" style={{ marginTop: '5rem' }}>
       <MuiPickersUtilsProvider
         libInstance={moment}
         utils={MomentUtils}
@@ -79,20 +89,26 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
               alignItems="center"
             >
               <Grid item xs={12}>
-                <h2 style={{ color: '#163a5f' }}>Configura tu cuenta</h2>
+                {user.status !== '' ? (
+                  <h2 style={{ color: '#163a5f' }}>Edita tu cuenta</h2>
+                ) : (
+                  <h2 style={{ color: '#163a5f' }}>Configura tu cuenta</h2>
+                )}
               </Grid>
-              <Grid item xs={12}>
-                <KeyboardDatePicker
-                  disableFuture
-                  openTo="year"
-                  format="DD/MM/YYYY"
-                  label="Fecha de Nacimiento"
-                  views={['year', 'month', 'date']}
-                  value={user.birthday}
-                  defaultValue={moment().format('DD/MM/YYYY')}
-                  onChange={handleChange}
-                />
-              </Grid>
+              {!userRecord && (
+                <Grid item xs={12}>
+                  <KeyboardDatePicker
+                    disableFuture
+                    openTo="year"
+                    format="DD/MM/YYYY"
+                    label="Fecha de Nacimiento"
+                    views={['year', 'month', 'date']}
+                    value={userRecord ? user.birthday.toDate() : user.birthday}
+                    defaultValue={moment().format('DD/MM/YYYY')}
+                    onChange={handleChange}
+                  />
+                </Grid>
+              )}
               <Grid item xs={12} style={{ marginTop: '1rem' }}>
                 <FormControl className={classes.formControl}>
                   <TextField
@@ -108,30 +124,50 @@ export default function AccountType({ nextStep, user, setUser, handleChange }) {
                   </FormHelperText>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
-                <FormControl
-                  variant="outlined"
-                  required
-                  className={classes.formControl}
-                >
-                  <InputLabel id="type">Tipo de Cuenta</InputLabel>
-                  <Select
-                    labelId="type"
-                    id="type"
-                    name="type"
-                    value={user.type}
-                    onChange={handleChange}
-                    label="Tipo de Cuenta"
+              {user.type === 'Doctor' && (
+                <Grid item xs={12}>
+                  <FormControl
+                    className={classes.formControl}
                     style={{ minWidth: '15.5rem' }}
                   >
-                    <MenuItem value="">
-                      <em>Seleccionar:</em>
-                    </MenuItem>
-                    <MenuItem value="Paciente">Paciente</MenuItem>
-                    <MenuItem value="Doctor">Doctor</MenuItem>
-                  </Select>
-                  <FormHelperText>Doctor o Paciente</FormHelperText>
-                </FormControl>
+                    <TextField
+                      required
+                      variant="outlined"
+                      name="name"
+                      label="Escribe tu nombre"
+                      value={user.name}
+                      onChange={handleChange}
+                    />
+                    <FormHelperText>Escribe tu nombre completo</FormHelperText>
+                  </FormControl>
+                </Grid>
+              )}
+              <Grid item xs={12}>
+                {!userRecord && (
+                  <FormControl
+                    variant="outlined"
+                    required
+                    className={classes.formControl}
+                  >
+                    <InputLabel id="type">Tipo de Cuenta</InputLabel>
+                    <Select
+                      labelId="type"
+                      id="type"
+                      name="type"
+                      value={user.type}
+                      onChange={handleChange}
+                      label="Tipo de Cuenta"
+                      style={{ minWidth: '15.5rem' }}
+                    >
+                      <MenuItem value="">
+                        <em>Seleccionar:</em>
+                      </MenuItem>
+                      <MenuItem value="Paciente">Paciente</MenuItem>
+                      <MenuItem value="Doctor">Doctor</MenuItem>
+                    </Select>
+                    <FormHelperText>Doctor o Paciente</FormHelperText>
+                  </FormControl>
+                )}
               </Grid>
               <Grid item xs={12} style={{ marginTop: '1rem' }}>
                 <FormControl
