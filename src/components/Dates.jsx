@@ -1,25 +1,19 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect } from 'react'
 import { navigate } from 'gatsby'
 
-import { FirebaseContext } from '../firebase/context'
 import useAuth from '../hooks/useAuth'
 
 import Layout from './Layout'
 import Spinner from './Spinner'
 
 export default function Dates() {
-  const [isLoading, setIsLoading] = useState(true)
-  const { firebase } = useContext(FirebaseContext)
-  const user = useAuth()
+  const { user, fetchingUser } = useAuth()
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) return navigate('login')
-      setIsLoading(false)
-    })
-  }, [firebase, user])
+  // useEffect(() => {
+  //   if (!user && !fetchingUser) return navigate('login')
+  // }, [user, fetchingUser])
 
-  if (!user || isLoading) return <Spinner />
+  if (fetchingUser) return <Spinner />
 
   return (
     <Layout>

@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import { firebase } from '../firebase'
 
+import useAuth from './useAuth'
+
 export default function useProfile() {
   const [userRecord, setUserRecord] = useState()
   const [children, setChildren] = useState()
   const [isLoading, setIsLoading] = useState(true)
+  const { user, fetchingUser } = useAuth()
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    if (!fetchingUser) {
       const getProfile = async () => {
         const parent = await firebase.firestore().doc(`/users/${user.uid}`)
 
@@ -24,8 +27,8 @@ export default function useProfile() {
         setIsLoading(false)
       }
       getProfile()
-    })
-  }, [])
+    }
+  }, [fetchingUser, user])
 
   function loopChildren(snapshot) {
     const child = snapshot.docs.map(doc => {

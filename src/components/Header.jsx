@@ -29,7 +29,7 @@ function Header(props) {
   const { siteTitle } = props
   const { firebase } = useContext(FirebaseContext)
   const [anchorEl, setAnchorEl] = useState(null)
-  const user = useAuth()
+  const { user } = useAuth()
   const open = Boolean(anchorEl)
   const classes = headerStyles()
 

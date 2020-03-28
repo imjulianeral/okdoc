@@ -1,6 +1,5 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect } from 'react'
 import { Link, navigate } from 'gatsby'
-import { FirebaseContext } from '../../firebase/context'
 import useAuth from '../../hooks/useAuth'
 import useDoctors from '../../hooks/useDoctors'
 
@@ -20,19 +19,15 @@ import { avatarStyles } from '../material/Material.config'
 import Spinner from '../Spinner'
 
 export default function DoctorsList() {
-  const { firebase } = useContext(FirebaseContext)
-  const user = useAuth()
+  const { user, fetchingUser } = useAuth()
   const { doctors, isLoading } = useDoctors('createdAt')
-
   const classes = avatarStyles()
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) return navigate('login')
-    })
-  }, [firebase])
+  // useEffect(() => {
+  //   if (!user && !fetchingUser) return navigate('login')
+  // }, [user, fetchingUser])
 
-  if (!user || isLoading) return <Spinner />
+  if (fetchingUser || isLoading) return <Spinner />
 
   return (
     <Container maxWidth="xs" style={{ marginTop: '7rem' }}>

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { FirebaseContext } from '../../firebase/context'
+import useAuth from '../../hooks/useAuth'
 import useProfile from '../../hooks/useProfile'
 import useFormValidator from '../../hooks/useFormValidator'
 import validateCreateAccount from '../../validation/validateCreateAccount'
@@ -11,9 +12,9 @@ import Summary from './Summary'
 import Success from './Success'
 
 export default function ProfileForm() {
-  const { firebase } = useContext(FirebaseContext)
   const [formStep, setFormStep] = useState(1)
-  const [authUser, setAuthUser] = useState({})
+  const { firebase } = useContext(FirebaseContext)
+  const { user } = useAuth()
   const { userRecord, children, isLoading } = useProfile()
   const initialState = {
     birthday: new Date(),
@@ -38,16 +39,8 @@ export default function ProfileForm() {
   } = useFormValidator(initialState, validateCreateAccount, createProfile)
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        setAuthUser(user)
-      } else {
-        setAuthUser(null)
-      }
-    })
-
     if (userRecord) setValues(userRecord)
-  }, [firebase, userRecord])
+  }, [userRecord, setValues])
 
   const nextStep = () => {
     setFormStep(formStep + 1)
@@ -58,9 +51,9 @@ export default function ProfileForm() {
   }
 
   async function createProfile() {
-    values.name = values.name ? values.name : authUser.displayName
-    values.email = authUser.email
-    await authUser.updateProfile({
+    values.name = values.name ? values.name : user.displayName
+    values.email = user.email
+    await user.updateProfile({
       photoURL: values.avatar,
     })
 
@@ -68,10 +61,10 @@ export default function ProfileForm() {
       const { cv, features, children, ...userProfile } = values
       await firebase
         .firestore()
-        .doc(`users/${authUser.uid}`)
+        .doc(`users/${user.uid}`)
         .set(userProfile)
 
-      const parent = await firebase.firestore().doc(`/users/${authUser.uid}`)
+      const parent = await firebase.firestore().doc(`/users/${user.uid}`)
       const boysAssigned = children.map(child => {
         return {
           ...child,
@@ -105,10 +98,8 @@ export default function ProfileForm() {
 
     if (values.type === 'Doctor') {
       const { children, cv, ...userProfile } = values
-      const doctor = await firebase.firestore().doc(`/users/${authUser.uid}`)
+      const doctor = await firebase.firestore().doc(`/users/${user.uid}`)
       const userData = await doctor.get()
-
-      console.log(userData.data())
 
       if (typeof userData.data() !== 'undefined') {
         await doctor.update({
@@ -117,17 +108,17 @@ export default function ProfileForm() {
         await firebase
           .storage()
           .ref()
-          .child(`doctors/${authUser.uid}`)
+          .child(`doctors/${user.uid}`)
           .put(cv)
       } else {
         await firebase
           .firestore()
-          .doc(`users/${authUser.uid}`)
+          .doc(`users/${user.uid}`)
           .set(userProfile)
         await firebase
           .storage()
           .ref()
-          .child(`doctors/${authUser.uid}`)
+          .child(`doctors/${user.uid}`)
           .put(cv)
       }
     }
@@ -176,7 +167,7 @@ export default function ProfileForm() {
           prevStep={prevStep}
           user={values}
           userRecord={userRecord}
-          authUser={authUser}
+          authUser={user}
         />
       )
     case 4:

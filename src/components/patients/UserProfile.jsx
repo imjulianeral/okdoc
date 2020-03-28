@@ -1,25 +1,22 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { navigate } from 'gatsby'
 
-import { FirebaseContext } from '../../firebase/context'
-
 import useProfile from '../../hooks/useProfile'
+import useAuth from '../../hooks/useAuth'
 import Spinner from '../Spinner'
 import ProfileForm from '../userForm/ProfileForm'
 import ProfileData from './ProfileData'
 import SEO from '../SEO'
 
 export default function UserProfile() {
-  const { firebase } = useContext(FirebaseContext)
+  const { user, fetchingUser } = useAuth()
   const { userRecord, children, isLoading } = useProfile()
 
-  useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
-      if (!user) return navigate('login')
-    })
-  }, [firebase])
+  // useEffect(() => {
+  //   if (!user && !fetchingUser) return navigate('login')
+  // }, [user, fetchingUser])
 
-  if (isLoading) return <Spinner />
+  if (isLoading && fetchingUser) return <Spinner />
 
   return (
     <>

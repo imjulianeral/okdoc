@@ -15,7 +15,7 @@ import '../css/layout.css'
 import BottomNav from './BottomNav'
 
 function Layout({ children }) {
-  const user = useAuth()
+  const { user } = useAuth()
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
