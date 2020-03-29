@@ -86,18 +86,20 @@ export default function Summary({
                         />
                       </ListItem>
                     </Grid>
-                    <Grid item xs={6}>
-                      <ListItem button style={{ textAlign: 'center' }}>
-                        <ListItemText
-                          primary={type === 'Doctor' ? 'Logros' : 'Hijos'}
-                          secondary={
-                            type === 'Doctor'
-                              ? features.length
-                              : children.length
-                          }
-                        />
-                      </ListItem>
-                    </Grid>
+                    {type !== 'Admin' && (
+                      <Grid item xs={6}>
+                        <ListItem button style={{ textAlign: 'center' }}>
+                          <ListItemText
+                            primary={type === 'Doctor' ? 'Logros' : 'Hijos'}
+                            secondary={
+                              type === 'Doctor'
+                                ? features.length
+                                : children.length
+                            }
+                          />
+                        </ListItem>
+                      </Grid>
+                    )}
                     <Grid item xs={12}>
                       <ListItem button style={{ textAlign: 'center' }}>
                         <ListItemText

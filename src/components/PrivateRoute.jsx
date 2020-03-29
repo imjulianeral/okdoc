@@ -16,7 +16,7 @@ export default function PrivateRoute({
       return navigate('login')
     }
     setRender(true)
-  }, [fetchingUser])
+  }, [fetchingUser, user])
 
   return <>{render && <Component {...rest} />}</>
 }

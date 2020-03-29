@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { firebase } from '../firebase'
 
-export default function useDoctors(order) {
-  const [doctors, setDoctors] = useState([])
+export default function useDoctors(type, order) {
+  const [records, setRecords] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -10,24 +10,24 @@ export default function useDoctors(order) {
       await firebase
         .firestore()
         .collection('users')
-        .where('type', '==', 'Doctor')
+        .where('type', '==', type)
         .orderBy(order, 'desc')
         .onSnapshot(manageSnap)
     }
     getDocs()
-  }, [order])
+  }, [order, type])
 
   function manageSnap(snapshot) {
-    const doctors = snapshot.docs.map(doc => {
+    const record = snapshot.docs.map(doc => {
       return {
         id: doc.id,
         ...doc.data(),
       }
     })
 
-    setDoctors(doctors)
+    setRecords(record)
     setIsLoading(false)
   }
 
-  return { doctors, isLoading }
+  return { records, isLoading }
 }

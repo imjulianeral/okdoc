@@ -2,10 +2,15 @@ import React, { useState } from 'react'
 import { Link } from 'gatsby'
 
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core'
-import { Favorite, LocalHospital, Event, PersonPin } from '@material-ui/icons'
+import {
+  LocalHospital,
+  PersonPin,
+  AccessibilityNew,
+  SupervisorAccount,
+} from '@material-ui/icons'
 import { navBottomStyles } from './material/Material.config'
 
-export default function BottomNav({ user }) {
+export default function BottomAdmin({ user }) {
   const [value, setValue] = useState()
   const classes = navBottomStyles()
 
@@ -19,23 +24,23 @@ export default function BottomNav({ user }) {
       <BottomNavigationAction
         onMouseEnter={() => setValue(0)}
         component={Link}
-        to={'/app/favoritos'}
-        label="Favoritos"
-        icon={<Favorite />}
-      />
-      <BottomNavigationAction
-        onMouseEnter={() => setValue(1)}
-        component={Link}
         to={'/app/doctores'}
         label="Doctores"
         icon={<LocalHospital />}
       />
       <BottomNavigationAction
+        onMouseEnter={() => setValue(1)}
+        component={Link}
+        to={'/app/usuarios'}
+        label="Usuarios"
+        icon={<AccessibilityNew />}
+      />
+      <BottomNavigationAction
         onMouseEnter={() => setValue(2)}
         component={Link}
-        to={'/app/citas'}
-        label="Citas"
-        icon={<Event />}
+        to={'/app/admins'}
+        label="Administradores"
+        icon={<SupervisorAccount />}
       />
       <BottomNavigationAction
         onMouseEnter={() => setValue(3)}

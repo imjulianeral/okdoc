@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { navigate } from 'gatsby'
+import React from 'react'
 import useAuth from '../hooks/useAuth'
 
 import Layout from './Layout'
 import Spinner from './Spinner'
 
 export default function Favorites() {
-  const { user, fetchingUser } = useAuth()
-
-  // useEffect(() => {
-  //   if (!user && !fetchingUser) return navigate('login')
-  // }, [user, fetchingUser])
+  const { fetchingUser } = useAuth()
 
   if (fetchingUser) return <Spinner />
 

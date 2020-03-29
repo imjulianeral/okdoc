@@ -18,7 +18,7 @@ export default function validateCreateAccount(values) {
   else if (values.phone.length < 10)
     errors.phone = 'El teléfono debe de tener al menos 10 digitos'
 
-  if (values.children) {
+  if (values.children && values.type !== 'Admin') {
     if (values.children.length === 0 && values.type === 'Paciente')
       errors.children = 'Debes de agregar a tus hijos'
 
@@ -31,7 +31,7 @@ export default function validateCreateAccount(values) {
     })
   }
 
-  if (values.features) {
+  if (values.features && values.type !== 'Admin') {
     if (values.type === 'Doctor' && values.features.length === 0)
       errors.features =
         'Debes de agregar logros destacados de tu carrera, esto ayudara a tu proceso de selección'

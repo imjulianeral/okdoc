@@ -5,6 +5,7 @@ import useProfile from '../../hooks/useProfile'
 import useFormValidator from '../../hooks/useFormValidator'
 import validateCreateAccount from '../../validation/validateCreateAccount'
 
+import SEO from '../SEO'
 import AccountType from './AccountType'
 import Children from './Children'
 import Doctor from './Doctor'
@@ -14,10 +15,10 @@ import Success from './Success'
 export default function ProfileForm() {
   const [formStep, setFormStep] = useState(1)
   const { firebase } = useContext(FirebaseContext)
-  const { user } = useAuth()
+  const { user, fetchingUser } = useAuth()
   const { userRecord, children, isLoading } = useProfile()
   const initialState = {
-    birthday: new Date(),
+    birthday: firebase.firestore.Timestamp.now().toDate(),
     children: [],
     createdAt: new Date(),
     features: [],
@@ -43,11 +44,19 @@ export default function ProfileForm() {
   }, [userRecord, setValues])
 
   const nextStep = () => {
-    setFormStep(formStep + 1)
+    if (userRecord.type === 'Admin' && formStep === 1) {
+      setFormStep(formStep + 2)
+    } else {
+      setFormStep(formStep + 1)
+    }
   }
 
   const prevStep = () => {
-    setFormStep(formStep - 1)
+    if (userRecord.type === 'Admin' && formStep === 3) {
+      setFormStep(formStep - 2)
+    } else {
+      setFormStep(formStep - 1)
+    }
   }
 
   async function createProfile() {
@@ -57,7 +66,15 @@ export default function ProfileForm() {
       photoURL: values.avatar,
     })
 
-    if (values.type === 'Paciente') {
+    if (values.type === 'Admin' && !fetchingUser) {
+      const { cv, features, children, ...userProfile } = values
+      await firebase
+        .firestore()
+        .doc(`users/${user.uid}`)
+        .set(userProfile)
+    }
+
+    if (values.type === 'Paciente' && !fetchingUser) {
       const { cv, features, children, ...userProfile } = values
       await firebase
         .firestore()
@@ -96,7 +113,7 @@ export default function ProfileForm() {
       })
     }
 
-    if (values.type === 'Doctor') {
+    if (values.type === 'Doctor' && !fetchingUser) {
       const { children, cv, ...userProfile } = values
       const doctor = await firebase.firestore().doc(`/users/${user.uid}`)
       const userData = await doctor.get()
@@ -127,18 +144,24 @@ export default function ProfileForm() {
   switch (formStep) {
     case 1:
       return (
-        <AccountType
-          nextStep={nextStep}
-          handleChange={handleChange}
-          user={values}
-          setUser={setValues}
-          isLoading={isLoading}
-          userRecord={userRecord}
-        />
+        <>
+          <SEO title="Editar cuenta" />
+
+          <AccountType
+            nextStep={nextStep}
+            handleChange={handleChange}
+            userValues={values}
+            setUser={setValues}
+            isLoading={isLoading}
+            userRecord={userRecord}
+          />
+        </>
       )
     case 2:
       return (
         <>
+          <SEO title="Editar cuenta" />
+
           {values.type === 'Paciente' ? (
             <Children
               nextStep={nextStep}
@@ -161,17 +184,27 @@ export default function ProfileForm() {
       )
     case 3:
       return (
-        <Summary
-          handleSubmit={handleSubmit}
-          nextStep={nextStep}
-          prevStep={prevStep}
-          user={values}
-          userRecord={userRecord}
-          authUser={user}
-        />
+        <>
+          <SEO title="Editar cuenta" />
+
+          <Summary
+            handleSubmit={handleSubmit}
+            nextStep={nextStep}
+            prevStep={prevStep}
+            user={values}
+            userRecord={userRecord}
+            authUser={user}
+          />
+        </>
       )
     case 4:
-      return <Success errors={errors} prevStep={prevStep} />
+      return (
+        <>
+          <SEO title="Editar cuenta" />
+
+          <Success errors={errors} prevStep={prevStep} />
+        </>
+      )
 
     default:
       break

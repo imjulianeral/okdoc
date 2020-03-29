@@ -8,14 +8,18 @@ import { theme } from './material/Material.config'
 import { SnackbarProvider } from 'notistack'
 
 import useAuth from '../hooks/useAuth'
+import useProfile from '../hooks/useProfile'
 
 import Header from './Header'
 
 import '../css/layout.css'
 import BottomNav from './BottomNav'
+import BottomAdmin from './BottomAdmin'
 
 function Layout({ children }) {
   const { user } = useAuth()
+  const { userRecord, isLoading } = useProfile()
+
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
       site {
@@ -32,7 +36,11 @@ function Layout({ children }) {
         <CssBaseline />
         <Header siteTitle={data.site.siteMetadata.title} />
         <main>{children}</main>
-        {user && <BottomNav />}
+        {!isLoading && userRecord.type === 'Admin' ? (
+          <BottomAdmin user={user} />
+        ) : (
+          <BottomNav user={user} />
+        )}
       </SnackbarProvider>
     </ThemeProvider>
   )

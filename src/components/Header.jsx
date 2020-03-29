@@ -13,25 +13,21 @@ import {
   Avatar,
   ListItemIcon,
 } from '@material-ui/core'
-import {
-  AccountCircle,
-  Menu as MenuIcon,
-  Face,
-  PersonAdd,
-  ExitToApp,
-} from '@material-ui/icons'
+import { AccountCircle, Face, PersonAdd, ExitToApp } from '@material-ui/icons'
 import { headerStyles } from './material/Material.config'
 
 import { FirebaseContext } from '../firebase/context'
 import useAuth from '../hooks/useAuth'
+import useProfile from '../hooks/useProfile'
 
 function Header(props) {
-  const { siteTitle } = props
-  const { firebase } = useContext(FirebaseContext)
   const [anchorEl, setAnchorEl] = useState(null)
+  const { firebase } = useContext(FirebaseContext)
   const { user } = useAuth()
-  const open = Boolean(anchorEl)
+  const { userRecord, isLoading } = useProfile()
+  const { siteTitle } = props
   const classes = headerStyles()
+  const open = Boolean(anchorEl)
 
   const handleMenu = event => {
     setAnchorEl(event.currentTarget)
@@ -43,16 +39,6 @@ function Header(props) {
   return (
     <AppBar color="secondary">
       <Toolbar>
-        {user && (
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
-        )}
         <Typography variant="h6" className={classes.title}>
           <Link
             to="/"
@@ -96,17 +82,19 @@ function Header(props) {
               open={open}
               onClose={handleClose}
             >
-              <Link
-                to="/app/perfil"
-                style={{ textDecoration: 'none', color: '#000' }}
-              >
-                <MenuItem onClick={handleClose}>
-                  <ListItemIcon>
-                    <Face color="primary" fontSize="small" />
-                  </ListItemIcon>
-                  Perfil
-                </MenuItem>
-              </Link>
+              {!isLoading && userRecord.type !== 'Admin' && (
+                <Link
+                  to="/app/perfil"
+                  style={{ textDecoration: 'none', color: '#000' }}
+                >
+                  <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <Face color="primary" fontSize="small" />
+                    </ListItemIcon>
+                    Perfil
+                  </MenuItem>
+                </Link>
+              )}
               <Link
                 to="/"
                 onClick={() => firebase.auth().signOut()}

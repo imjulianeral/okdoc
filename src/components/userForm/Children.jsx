@@ -28,7 +28,10 @@ import {
 } from '@material-ui/icons'
 
 export default function Children({ nextStep, prevStep, user, setUser, boys }) {
-  const [children, setChildren] = useState(boys ? boys : user.children)
+  console.log(boys)
+  const [children, setChildren] = useState(
+    boys.length !== 0 ? boys : user.children
+  )
   const classes = formStyles()
 
   const next = e => {
@@ -126,6 +129,7 @@ export default function Children({ nextStep, prevStep, user, setUser, boys }) {
                     <Grid item xs={12}>
                       <KeyboardDatePicker
                         disableFuture
+                        disabled={child.id}
                         openTo="year"
                         format="DD/MM/YYYY"
                         label="Fecha de Nacimiento de tu hijo"

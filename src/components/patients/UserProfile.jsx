@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react'
-import { navigate } from 'gatsby'
+import React from 'react'
 
 import useProfile from '../../hooks/useProfile'
 import useAuth from '../../hooks/useAuth'
@@ -9,12 +8,8 @@ import ProfileData from './ProfileData'
 import SEO from '../SEO'
 
 export default function UserProfile() {
-  const { user, fetchingUser } = useAuth()
+  const { fetchingUser } = useAuth()
   const { userRecord, children, isLoading } = useProfile()
-
-  // useEffect(() => {
-  //   if (!user && !fetchingUser) return navigate('login')
-  // }, [user, fetchingUser])
 
   if (isLoading && fetchingUser) return <Spinner />
 

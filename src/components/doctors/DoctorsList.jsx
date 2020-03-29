@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react'
-import { Link, navigate } from 'gatsby'
+import React from 'react'
+import { Link } from 'gatsby'
 import useAuth from '../../hooks/useAuth'
-import useDoctors from '../../hooks/useDoctors'
+import useQuery from '../../hooks/useQuery'
+import useProfile from '../../hooks/useProfile'
 
 import {
   Container,
@@ -17,15 +18,13 @@ import {
 import { avatarStyles } from '../material/Material.config'
 
 import Spinner from '../Spinner'
+import Status from '../Status'
 
 export default function DoctorsList() {
-  const { user, fetchingUser } = useAuth()
-  const { doctors, isLoading } = useDoctors('createdAt')
+  const { fetchingUser } = useAuth()
+  const { userRecord, isLoading } = useProfile()
+  const { records } = useQuery('Doctor', 'createdAt')
   const classes = avatarStyles()
-
-  // useEffect(() => {
-  //   if (!user && !fetchingUser) return navigate('login')
-  // }, [user, fetchingUser])
 
   if (fetchingUser || isLoading) return <Spinner />
 
@@ -40,11 +39,11 @@ export default function DoctorsList() {
           <Grid container direction="row" justify="center" alignItems="center">
             <Grid item xs={12} lg={12}>
               <List>
-                {doctors.map(doctor => (
+                {records.map(doctor => (
                   <ListItem
-                    button
+                    button={userRecord.type !== 'Admin'}
                     key={doctor.id}
-                    component={Link}
+                    component={userRecord.type !== 'Admin' && Link}
                     to={`/app/doctor/${doctor.id}`}
                   >
                     <ListItemAvatar>
@@ -55,6 +54,9 @@ export default function DoctorsList() {
                       primary="Logros"
                       secondary={doctor.features.length}
                     />
+                    {!isLoading && userRecord.type === 'Admin' && (
+                      <Status STATUS={doctor.status} ID={doctor.id} />
+                    )}
                   </ListItem>
                 ))}
               </List>

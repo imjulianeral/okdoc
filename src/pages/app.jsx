@@ -8,7 +8,9 @@ import DoctorsList from '../components/doctors/DoctorsList'
 import Favorites from '../components/Favorites'
 import Dates from '../components/Dates'
 import DoctorProfile from '../components/doctors/DoctorProfile'
+import PatientsList from '../components/patients/PatientsList'
 import PrivateRoute from '../components/PrivateRoute'
+import AdminsList from '../components/AdminsList'
 
 export default function app() {
   return (
@@ -20,6 +22,8 @@ export default function app() {
         <PrivateRoute component={DoctorProfile} path="/doctor/:id" />
         <PrivateRoute component={Favorites} path="/favoritos" />
         <PrivateRoute component={Dates} path="/citas" />
+        <PrivateRoute component={PatientsList} path="/usuarios" />
+        <PrivateRoute component={AdminsList} path="/admins" />
       </Router>
     </Layout>
   )

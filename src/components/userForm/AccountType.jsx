@@ -33,44 +33,50 @@ moment.locale('es')
 
 export default function AccountType({
   nextStep,
-  user,
+  userValues,
   setUser,
   handleChange,
   isLoading,
   userRecord,
 }) {
-  const authUser = useAuth()
+  const { user } = useAuth()
   const { firebase } = useContext(FirebaseContext)
   const classes = formStyles()
   const avatarClasses = avatarStyles()
   const next = e => {
     e.preventDefault()
-    if (user.type === 'Paciente') setUser({ ...user, status: 'ACTIVADO' })
-    else if (user.type === 'Doctor' && user.avatar !== '') setUser({ ...user })
-    else setUser({ ...user, status: 'PENDIENTE' })
+    if (userValues.type === 'Paciente')
+      setUser({ ...userValues, status: 'ACTIVADO' })
+    else if (userValues.type === 'Doctor' && userValues.avatar !== '')
+      setUser({ ...userValues })
+    else if (userValues.type === 'Admin') setUser({ ...userValues })
+    else setUser({ ...userValues, status: 'PENDIENTE' })
     nextStep()
   }
   const fileSelectedHandler = async e => {
     await firebase
       .storage()
       .ref()
-      .child(`avatars/${authUser.uid}`)
+      .child(`avatars/${user.uid}`)
       .put(e.target.files[0])
 
     const image = await firebase
       .storage()
-      .ref(`avatars/${authUser.uid}`)
+      .ref(`avatars/${user.uid}`)
       .getDownloadURL()
 
     setUser({
-      ...user,
+      ...userValues,
       avatar: image,
     })
   }
 
   if (isLoading) return <Spinner />
   return (
-    <Container maxWidth="xs" style={{ marginTop: '5rem' }}>
+    <Container
+      maxWidth="xs"
+      style={{ marginTop: '5rem', marginBottom: '5rem' }}
+    >
       <MuiPickersUtilsProvider
         libInstance={moment}
         utils={MomentUtils}
@@ -89,7 +95,7 @@ export default function AccountType({
               alignItems="center"
             >
               <Grid item xs={12}>
-                {user.status !== '' ? (
+                {userValues.status !== '' ? (
                   <h2 style={{ color: '#163a5f' }}>Edita tu cuenta</h2>
                 ) : (
                   <h2 style={{ color: '#163a5f' }}>Configura tu cuenta</h2>
@@ -103,8 +109,10 @@ export default function AccountType({
                     format="DD/MM/YYYY"
                     label="Fecha de Nacimiento"
                     views={['year', 'month', 'date']}
-                    value={userRecord ? user.birthday.toDate() : user.birthday}
-                    defaultValue={moment().format('DD/MM/YYYY')}
+                    value={userValues.birthday}
+                    defaultValue={moment(userValues.birthday).format(
+                      'DD/MM/YYYY'
+                    )}
                     onChange={handleChange}
                   />
                 </Grid>
@@ -116,7 +124,7 @@ export default function AccountType({
                     variant="outlined"
                     name="phone"
                     label="Número celular"
-                    value={user.phone}
+                    value={userValues.phone}
                     onChange={handleChange}
                   />
                   <FormHelperText>
@@ -124,7 +132,7 @@ export default function AccountType({
                   </FormHelperText>
                 </FormControl>
               </Grid>
-              {user.type === 'Doctor' && (
+              {userValues.type === 'Doctor' && (
                 <Grid item xs={12}>
                   <FormControl
                     className={classes.formControl}
@@ -135,7 +143,7 @@ export default function AccountType({
                       variant="outlined"
                       name="name"
                       label="Escribe tu nombre"
-                      value={user.name}
+                      value={userValues.name}
                       onChange={handleChange}
                     />
                     <FormHelperText>Escribe tu nombre completo</FormHelperText>
@@ -154,7 +162,7 @@ export default function AccountType({
                       labelId="type"
                       id="type"
                       name="type"
-                      value={user.type}
+                      value={userValues.type}
                       onChange={handleChange}
                       label="Tipo de Cuenta"
                       style={{ minWidth: '15.5rem' }}
@@ -182,10 +190,12 @@ export default function AccountType({
                     labelId="city"
                     id="city"
                     name="city"
-                    value={user.city}
+                    value={userValues.city}
                     label="Tipo de Cuenta"
                   >
-                    <MenuItem value={user.city}>{user.city}</MenuItem>
+                    <MenuItem value={userValues.city}>
+                      {userValues.city}
+                    </MenuItem>
                   </Select>
                   <FormHelperText>
                     Debes de residir en Aguascalientes, México. De otra forma
@@ -205,7 +215,10 @@ export default function AccountType({
                   alignItems="center"
                 >
                   <Grid item xs={6}>
-                    <Avatar className={avatarClasses.large} src={user.avatar} />
+                    <Avatar
+                      className={avatarClasses.large}
+                      src={userValues.avatar}
+                    />
                   </Grid>
                   <Grid item xs={6} style={{ marginTop: '4rem' }}>
                     <input
@@ -231,7 +244,10 @@ export default function AccountType({
                   color="primary"
                   onClick={next}
                   disabled={
-                    !user.type || !user.phone || !user.birthday || !user.avatar
+                    !userValues.type ||
+                    !userValues.phone ||
+                    !userValues.birthday ||
+                    !userValues.avatar
                   }
                 >
                   <NavigateNext />

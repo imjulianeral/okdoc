@@ -10,6 +10,7 @@ import {
   ListItemText,
   Button,
 } from '@material-ui/core'
+import { Edit } from '@material-ui/icons'
 import { avatarStyles } from '../material/Material.config'
 
 import moment from 'moment'
@@ -77,30 +78,32 @@ export default function ProfileData({ user, children }) {
                   </ListItem>
                 </Grid>
                 <Grid item xs={12}>
-                  <ListItem button style={{ textAlign: 'center' }}>
-                    <ListItemText
-                      primary={user.type === 'Doctor' ? 'Logros' : 'Hijos'}
-                      secondary={
-                        user.type === 'Doctor'
-                          ? user.features.length
-                          : children.map((child, idx) => (
-                              <ListItem button key={idx}>
-                                <ListItemText
-                                  primary="Nombre"
-                                  secondary={child.name}
-                                />
-                                <ListItemText
-                                  primary="Edad"
-                                  secondary={moment().diff(
-                                    child.birthday.toDate(),
-                                    'years'
-                                  )}
-                                />
-                              </ListItem>
-                            ))
-                      }
-                    />
-                  </ListItem>
+                  {user.type !== 'Admin' && (
+                    <ListItem button style={{ textAlign: 'center' }}>
+                      <ListItemText
+                        primary={user.type === 'Doctor' ? 'Logros' : 'Hijos'}
+                        secondary={
+                          user.type === 'Doctor'
+                            ? user.features.length
+                            : children.map((child, idx) => (
+                                <ListItem button key={idx}>
+                                  <ListItemText
+                                    primary="Nombre"
+                                    secondary={child.name}
+                                  />
+                                  <ListItemText
+                                    primary="Edad"
+                                    secondary={moment().diff(
+                                      child.birthday.toDate(),
+                                      'years'
+                                    )}
+                                  />
+                                </ListItem>
+                              ))
+                        }
+                      />
+                    </ListItem>
+                  )}
                 </Grid>
                 {user.type === 'Doctor' && (
                   <Grid item xs={12}>
@@ -114,10 +117,13 @@ export default function ProfileData({ user, children }) {
                 )}
                 <Grid item xs={12}>
                   <Button
+                    disabled={user.status === 'PENDIENTE'}
                     variant="outlined"
                     color="primary"
+                    size="large"
+                    fullWidth={true}
                     href="/app/editar-perfil"
-                    style={{ textAlign: 'center', display: 'block' }}
+                    startIcon={<Edit />}
                   >
                     Editar Perfil
                   </Button>
