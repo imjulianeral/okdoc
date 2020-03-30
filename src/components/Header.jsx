@@ -35,7 +35,6 @@ function Header(props) {
   const handleClose = () => {
     setAnchorEl(null)
   }
-
   return (
     <AppBar color="secondary">
       <Toolbar>

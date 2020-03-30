@@ -95,7 +95,7 @@ export default function AccountType({
               alignItems="center"
             >
               <Grid item xs={12}>
-                {userValues.status !== '' ? (
+                {userRecord ? (
                   <h2 style={{ color: '#163a5f' }}>Edita tu cuenta</h2>
                 ) : (
                   <h2 style={{ color: '#163a5f' }}>Configura tu cuenta</h2>
@@ -220,7 +220,7 @@ export default function AccountType({
                       src={userValues.avatar}
                     />
                   </Grid>
-                  <Grid item xs={6} style={{ marginTop: '4rem' }}>
+                  <Grid item xs={6}>
                     <input
                       accept="image/*"
                       className={classes.input}
@@ -238,7 +238,7 @@ export default function AccountType({
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ marginTop: '4rem' }}>
                 <Button
                   variant="contained"
                   color="primary"

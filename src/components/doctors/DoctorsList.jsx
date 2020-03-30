@@ -19,6 +19,7 @@ import { avatarStyles } from '../material/Material.config'
 
 import Spinner from '../Spinner'
 import Status from '../Status'
+import SEO from '../SEO'
 
 export default function DoctorsList() {
   const { fetchingUser } = useAuth()
@@ -30,6 +31,8 @@ export default function DoctorsList() {
 
   return (
     <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
+      <SEO title="Doctores" />
+
       <Grow
         in={true}
         style={{ transformOrigin: '0 0 0' }}
@@ -40,24 +43,42 @@ export default function DoctorsList() {
             <Grid item xs={12} lg={12}>
               <List>
                 {records.map(doctor => (
-                  <ListItem
-                    button={userRecord.type !== 'Admin'}
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
                     key={doctor.id}
-                    component={userRecord.type !== 'Admin' && Link}
-                    to={`/app/doctor/${doctor.id}`}
                   >
-                    <ListItemAvatar>
-                      <Avatar src={doctor.avatar} className={classes.medium} />
-                    </ListItemAvatar>
-                    <ListItemText primary="Nombre" secondary={doctor.name} />
-                    <ListItemText
-                      primary="Logros"
-                      secondary={doctor.features.length}
-                    />
-                    {!isLoading && userRecord.type === 'Admin' && (
-                      <Status STATUS={doctor.status} ID={doctor.id} />
-                    )}
-                  </ListItem>
+                    <Grid item xs={10}>
+                      <ListItem
+                        button
+                        key={doctor.id}
+                        component={Link}
+                        to={`/app/doctor/${doctor.id}`}
+                      >
+                        <ListItemAvatar>
+                          <Avatar
+                            src={doctor.avatar}
+                            className={classes.medium}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary="Nombre"
+                          secondary={doctor.name}
+                        />
+                        <ListItemText
+                          primary="Logros"
+                          secondary={doctor.features.length}
+                        />
+                      </ListItem>
+                    </Grid>
+                    <Grid item xs={2}>
+                      {!isLoading && userRecord.type === 'Admin' && (
+                        <Status STATUS={doctor.status} ID={doctor.id} />
+                      )}
+                    </Grid>
+                  </Grid>
                 ))}
               </List>
             </Grid>

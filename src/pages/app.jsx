@@ -7,10 +7,12 @@ import ProfileForm from '../components/userForm/ProfileForm'
 import DoctorsList from '../components/doctors/DoctorsList'
 import Favorites from '../components/Favorites'
 import Dates from '../components/Dates'
+import UserData from '../components/UserData'
 import DoctorProfile from '../components/doctors/DoctorProfile'
 import PatientsList from '../components/patients/PatientsList'
 import PrivateRoute from '../components/PrivateRoute'
-import AdminsList from '../components/AdminsList'
+import AdminsList from '../components/Admins/AdminsList'
+import AddAdmin from '../components/Admins/AddAdmin'
 
 export default function app() {
   return (
@@ -20,10 +22,12 @@ export default function app() {
         <PrivateRoute component={ProfileForm} path="/editar-perfil" />
         <PrivateRoute component={DoctorsList} path="/doctores" />
         <PrivateRoute component={DoctorProfile} path="/doctor/:id" />
+        <PrivateRoute component={UserData} path="/usuario/:id" />
         <PrivateRoute component={Favorites} path="/favoritos" />
         <PrivateRoute component={Dates} path="/citas" />
         <PrivateRoute component={PatientsList} path="/usuarios" />
         <PrivateRoute component={AdminsList} path="/admins" />
+        <PrivateRoute component={AddAdmin} path="/crear-admin" />
       </Router>
     </Layout>
   )

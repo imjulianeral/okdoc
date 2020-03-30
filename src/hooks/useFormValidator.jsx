@@ -27,7 +27,7 @@ export default function useFormValidator(initialState, validate, fn) {
   }
 
   // Function that is executed when the user submits a form
-  const handleSubmit = () => {
+  const handleSubmit = e => {
     // e.preventDefault()
     const validationErrors = validate(values)
     setErrors(validationErrors)

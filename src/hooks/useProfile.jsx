@@ -10,7 +10,7 @@ export default function useProfile() {
   const { user, fetchingUser } = useAuth()
 
   useEffect(() => {
-    if (user === null) return
+    if (user === null || typeof user === 'undefined') return
     if (!fetchingUser) {
       const getProfile = async () => {
         const parent = await firebase.firestore().doc(`/users/${user.uid}`)

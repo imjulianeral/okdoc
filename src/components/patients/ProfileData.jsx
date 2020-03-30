@@ -53,14 +53,19 @@ export default function ProfileData({ user, children }) {
                     />
                   </ListItem>
                 </Grid>
-                <Grid item xs={6}>
-                  <ListItem button style={{ textAlign: 'center' }}>
-                    <ListItemText
-                      primary="Edad"
-                      secondary={moment().diff(user.birthday.toDate(), 'years')}
-                    />
-                  </ListItem>
-                </Grid>
+                {user.type !== 'Admin' && (
+                  <Grid item xs={6}>
+                    <ListItem button style={{ textAlign: 'center' }}>
+                      <ListItemText
+                        primary="Edad"
+                        secondary={moment().diff(
+                          user.birthday.toDate(),
+                          'years'
+                        )}
+                      />
+                    </ListItem>
+                  </Grid>
+                )}
                 <Grid item xs={6}>
                   <ListItem button style={{ textAlign: 'center' }}>
                     <ListItemText
