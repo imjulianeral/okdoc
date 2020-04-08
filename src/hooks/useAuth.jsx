@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
-import { firebase } from '../firebase'
+import useFirebase from '../hooks/useFirebase'
 
 export default function useAuth() {
   const [user, setAuthUser] = useState(null)
   const [fetchingUser, setLoading] = useState(true)
+  const firebase = useFirebase()
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+    if (!firebase) return
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
         setAuthUser(user)
       } else {
@@ -14,8 +16,7 @@ export default function useAuth() {
       }
       setLoading(false)
     })
+  }, [firebase])
 
-    return () => unsubscribe()
-  }, [])
   return { user, fetchingUser }
 }

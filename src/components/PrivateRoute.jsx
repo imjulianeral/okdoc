@@ -9,14 +9,15 @@ export default function PrivateRoute({
   ...rest
 }) {
   const [render, setRender] = useState()
+
   const { user, fetchingUser } = useAuth()
   useEffect(() => {
-    if (!fetchingUser && !user) {
+    if (!user && !fetchingUser) {
       setRender(false)
       return navigate('login')
     }
     setRender(true)
-  }, [fetchingUser, user])
+  }, [user, fetchingUser])
 
   return <>{render && <Component {...rest} />}</>
 }

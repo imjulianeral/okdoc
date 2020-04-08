@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import useAuth from '../../hooks/useAuth'
-import useQuery from '../../hooks/useQuery'
+import useDoctors from '../../hooks/useDoctors'
 import useProfile from '../../hooks/useProfile'
 
 import {
@@ -24,11 +24,10 @@ import SEO from '../SEO'
 export default function DoctorsList() {
   const { fetchingUser } = useAuth()
   const { userRecord, isLoading } = useProfile()
-  const { records } = useQuery('Doctor', 'createdAt')
+  const { records } = useDoctors(userRecord, isLoading, 'createdAt')
   const classes = avatarStyles()
 
   if (fetchingUser || isLoading) return <Spinner />
-
   return (
     <Container maxWidth="xs" style={{ marginTop: '7rem' }}>
       <SEO title="Doctores" />

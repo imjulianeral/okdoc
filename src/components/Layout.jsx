@@ -7,6 +7,9 @@ import { CssBaseline } from '@material-ui/core'
 import { theme } from './material/Material.config'
 import { SnackbarProvider } from 'notistack'
 
+import { FirebaseContext } from '../firebase/context'
+
+import useFirebase from '../hooks/useFirebase'
 import useAuth from '../hooks/useAuth'
 import useProfile from '../hooks/useProfile'
 
@@ -19,6 +22,7 @@ import BottomAdmin from './BottomAdmin'
 function Layout({ children }) {
   const { user } = useAuth()
   const { userRecord, isLoading } = useProfile()
+  const firebase = useFirebase()
 
   const data = useStaticQuery(graphql`
     query SiteTitleQuery {
@@ -31,18 +35,20 @@ function Layout({ children }) {
   `)
 
   return (
-    <ThemeProvider theme={theme}>
-      <SnackbarProvider maxSnack={10}>
-        <CssBaseline />
-        <Header siteTitle={data.site.siteMetadata.title} />
-        <main>{children}</main>
-        {!isLoading && userRecord.type === 'Admin' ? (
-          <BottomAdmin user={user} />
-        ) : (
-          <BottomNav user={user} />
-        )}
-      </SnackbarProvider>
-    </ThemeProvider>
+    <FirebaseContext.Provider value={{ firebase }}>
+      <ThemeProvider theme={theme}>
+        <SnackbarProvider maxSnack={10}>
+          <CssBaseline />
+          <Header siteTitle={data.site.siteMetadata.title} />
+          <main>{children}</main>
+          {!isLoading && userRecord.type === 'Admin' ? (
+            <BottomAdmin user={user} />
+          ) : (
+            <BottomNav user={user} />
+          )}
+        </SnackbarProvider>
+      </ThemeProvider>
+    </FirebaseContext.Provider>
   )
 }
 

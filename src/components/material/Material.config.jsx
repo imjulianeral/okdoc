@@ -25,6 +25,7 @@ export const navBottomStyles = makeStyles(theme => ({
     width: '100%',
     position: 'fixed',
     bottom: 0,
+    zIndex: 2,
   },
 }))
 

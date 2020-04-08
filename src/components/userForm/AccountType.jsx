@@ -18,7 +18,7 @@ import {
   IconButton,
   Tooltip,
 } from '@material-ui/core'
-import { NavigateNext, Edit } from '@material-ui/icons'
+import { NavigateNext, AddAPhoto } from '@material-ui/icons'
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -105,6 +105,7 @@ export default function AccountType({
                 <Grid item xs={12}>
                   <KeyboardDatePicker
                     disableFuture
+                    inputVariant="outlined"
                     openTo="year"
                     format="DD/MM/YYYY"
                     label="Fecha de Nacimiento"
@@ -203,40 +204,27 @@ export default function AccountType({
                   </FormHelperText>
                 </FormControl>
               </Grid>
-              <Grid
-                item
-                xs={12}
-                style={{ marginTop: '1rem', marginBottom: '2rem' }}
-              >
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="center"
-                >
-                  <Grid item xs={6}>
-                    <Avatar
-                      className={avatarClasses.large}
-                      src={userValues.avatar}
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <input
-                      accept="image/*"
-                      className={classes.input}
-                      id="contained-button-file"
-                      type="file"
-                      onChange={fileSelectedHandler}
-                    />
-                    <Tooltip title="Subir imagen de perfil" placement="right">
-                      <label htmlFor="contained-button-file">
-                        <IconButton component="span">
-                          <Edit />
-                        </IconButton>
-                      </label>
-                    </Tooltip>
-                  </Grid>
-                </Grid>
+              <Grid item xs={12}>
+                <Avatar
+                  className={avatarClasses.large}
+                  src={userValues.avatar}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  id="contained-button-file"
+                  type="file"
+                  onChange={fileSelectedHandler}
+                />
+                <Tooltip title="Subir imagen de perfil" placement="right">
+                  <label htmlFor="contained-button-file">
+                    <IconButton component="span">
+                      <AddAPhoto />
+                    </IconButton>
+                  </label>
+                </Tooltip>
               </Grid>
               <Grid item xs={12} style={{ marginTop: '4rem' }}>
                 <Button

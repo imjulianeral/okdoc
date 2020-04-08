@@ -130,6 +130,7 @@ export default function Children({ nextStep, prevStep, user, setUser, boys }) {
                       <KeyboardDatePicker
                         disableFuture
                         disabled={child.id}
+                        inputVariant="outlined"
                         openTo="year"
                         format="DD/MM/YYYY"
                         label="Fecha de Nacimiento de tu hijo"
